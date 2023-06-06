@@ -1,10 +1,10 @@
 
 
-interface HopageProps {
+interface HomeProps {
     
 }
 
-const Homepage: React.FC<HopageProps> = (props) => {
+const HomePage: React.FC<HomeProps> = (props) => {
   return (
     <>
         <h1>Hello World</h1>
@@ -13,4 +13,4 @@ const Homepage: React.FC<HopageProps> = (props) => {
     
 }
 
-export default Homepage;
+export default HomePage;
