@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { MenuItem } from '@mui/material';
+import Searchbar from './Searchbar';
 
 
 interface ToolbarProps {
@@ -29,31 +30,29 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
 
     return (
         <>
-            <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <MUIToolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}>
-            <MoreHorizOutlinedIcon
-              fontSize='large'/>
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
-            Web Chat
-          </Typography>
-          <IconButton 
-            color="inherit"
-            size="large"
-            onClick={handleOpenUserMenu}>
-            <AccountCircleIcon 
-              fontSize='large'/>
-          </IconButton>
-        </MUIToolbar>
-      </AppBar>
-    </Box>
+          <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+              <MUIToolbar>
+                <IconButton
+                  size="medium"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu">
+                  <MoreHorizOutlinedIcon/>
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
+                  <Searchbar/>
+                </Typography>
+                <IconButton 
+                  color="inherit"
+                  size="medium"
+                  onClick={handleOpenUserMenu}>
+                  <AccountCircleIcon 
+                    fontSize='medium'/>
+                </IconButton>
+              </MUIToolbar>
+            </AppBar>
+          </Box>
         </>
     );
 };

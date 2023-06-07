@@ -1,11 +1,11 @@
 import React from 'react';
 import Toolbar from './Toolbar';
 
-interface HeaderProps {
+interface HeaderSidebarProps {
 
 }
 
-const Header: React.FC<HeaderProps> = ({  }) => {
+const HeaderSidebar: React.FC<HeaderSidebarProps> = ({  }) => {
     return (
         <>
             <Toolbar/>
@@ -13,4 +13,4 @@ const Header: React.FC<HeaderProps> = ({  }) => {
     );
 };
 
-export default Header;
+export default HeaderSidebar;

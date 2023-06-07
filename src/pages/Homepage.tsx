@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from '../components/Header';
+import HeaderSidebar from '../components/HeaderSidebar';
 import Sidebar from '../components/Sidebar';
-import CurrentChat from '../components/CurrentChat';
-import { Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
+import MainContent from '../components/MainContent';
 
 
 interface HomeProps {
@@ -12,15 +12,17 @@ interface HomeProps {
 const HomePage: React.FC<HomeProps> = (props) => {
   return (
     <>
-      <Header/>
-      <Grid container spacing={0.5}>
-        <Grid xs={4}>
-          <Sidebar/>
+      <div>
+        <Grid container spacing={0.5}>
+          <Grid xs={4}>
+            <HeaderSidebar/>
+            <Sidebar/>
+          </Grid>
+          <Grid xs={8}>
+            <MainContent/>
+          </Grid>
         </Grid>
-        <Grid xs={8}>
-          <CurrentChat/>
-        </Grid>
-      </Grid>
+      </div>
     </>
   )
     
