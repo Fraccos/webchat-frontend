@@ -26,7 +26,9 @@ const Chatbar: React.FC<ChatbarProps> = ({  }) => {
                     fontSize='medium'/>
                 </IconButton>
                 <h4>NOME CHAT</h4>
-                <SearchIcon />
+                <IconButton>
+                  <SearchIcon />
+                </IconButton>
                 <IconButton
                   size="medium"
                   edge="start"

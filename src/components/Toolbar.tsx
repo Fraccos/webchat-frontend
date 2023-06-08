@@ -3,11 +3,10 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import MUIToolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import Searchbar from './Searchbar';
 
 
@@ -21,11 +20,9 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-    {settings.map((setting) => (
-      <MenuItem key={setting} >
-        <Typography textAlign="center">{setting}</Typography>
-      </MenuItem>
-    ))}
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
     return (
@@ -37,19 +34,43 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
                   size="medium"
                   edge="start"
                   color="inherit"
-                  aria-label="menu">
+                  aria-label="menu"
+                  onClick={handleOpenUserMenu}>
                   <MoreHorizOutlinedIcon/>
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
                   <Searchbar/>
                 </Typography>
-                <IconButton 
-                  color="inherit"
-                  size="medium"
-                  onClick={handleOpenUserMenu}>
-                  <AccountCircleIcon 
-                    fontSize='medium'/>
-                </IconButton>
+
+
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}>
+                  <IconButton 
+                    color="inherit"
+                    size="medium"
+                    onClick={handleCloseUserMenu}
+                    sx={{justifyContent: 'center', display: 'flex'}}>
+                    <AccountCircleIcon/>
+                  </IconButton>
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
               </MUIToolbar>
             </AppBar>
           </Box>
@@ -57,7 +78,6 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
     );
 };
 //le scelte grafice sono ancora temporanee
-//aggiungere menù a tendina in caso di pressione di uno dei pulsanti (ho provato ad aggiungerlo ma non funziona)
-//https://mui.com/material-ui/react-app-bar/#ResponsiveAppBar.tsx
+//riga 66
 
 export default Toolbar;

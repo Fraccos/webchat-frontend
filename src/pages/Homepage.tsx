@@ -15,7 +15,6 @@ const HomePage: React.FC<HomeProps> = (props) => {
       <div>
         <Grid container spacing={0.5}>
           <Grid xs={4}>
-            <HeaderSidebar/>
             <Sidebar/>
           </Grid>
           <Grid xs={8}>
