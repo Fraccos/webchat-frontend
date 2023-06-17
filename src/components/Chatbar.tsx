@@ -22,12 +22,12 @@ const Chatbar: React.FC<ChatbarProps> = ({  }) => {
               <MUIToolbar>
                 <IconButton 
                   color="inherit"
-                  size="medium">
+                  size="large">
                   <AccountCircleIcon 
-                    fontSize='medium'/>
+                    fontSize='large'/>
                 </IconButton>
                 <Box sx={{ flexGrow: 1 }}>
-                  <h4>NOME CHAT</h4>
+                  <h3>NOME CHAT</h3>
                 </Box>
                 <IconButton
                   color="inherit">
