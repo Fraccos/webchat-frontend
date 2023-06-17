@@ -17,7 +17,8 @@ const Chatbar: React.FC<ChatbarProps> = ({  }) => {
     return (
         <>
             <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="static"
+              sx={{justifyContent:"center", flexDirection:"column", display:"flex", height:"80px" }}>
               <MUIToolbar>
                 <IconButton 
                   color="inherit"
@@ -25,8 +26,11 @@ const Chatbar: React.FC<ChatbarProps> = ({  }) => {
                   <AccountCircleIcon 
                     fontSize='medium'/>
                 </IconButton>
-                <h4>NOME CHAT</h4>
-                <IconButton>
+                <Box sx={{ flexGrow: 1 }}>
+                  <h4>NOME CHAT</h4>
+                </Box>
+                <IconButton
+                  color="inherit">
                   <SearchIcon />
                 </IconButton>
                 <IconButton

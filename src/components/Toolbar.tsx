@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem, Stack } from '@mui/material';
 import Searchbar from './Searchbar';
 
 
@@ -27,8 +27,9 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
 
     return (
         <>
-          <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+          <Stack sx={{ flexGrow: 1}} >
+            <AppBar position="static" 
+              sx={{justifyContent:"center", flexDirection:"column", display:"flex", height:"80px" }} >
               <MUIToolbar>
                 <IconButton
                   size="medium"
@@ -73,7 +74,7 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
                 </Menu>
               </MUIToolbar>
             </AppBar>
-          </Box>
+          </Stack>
         </>
     );
 };

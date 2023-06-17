@@ -14,10 +14,10 @@ const HomePage: React.FC<HomeProps> = (props) => {
     <>
       <div>
         <Grid container spacing={0.5}>
-          <Grid xs={4}>
+          <Grid xs={6} md={4}>
             <Sidebar/>
           </Grid>
-          <Grid xs={8}>
+          <Grid xs={6} md={8}>
             <MainContent/>
           </Grid>
         </Grid>
