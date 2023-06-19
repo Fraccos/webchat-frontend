@@ -1,4 +1,6 @@
+import { Container } from '@mui/material';
 import React from 'react';
+import RegisterForm from '../components/RegisterForm';
 
 
 interface RegisterProps {
@@ -8,7 +10,9 @@ interface RegisterProps {
 const RegisterPage: React.FC<RegisterProps> = (props) => {
   return (
     <>
-        <h1>Hello World</h1>
+      <Container sx={{padding:"50px"}}>
+        <RegisterForm></RegisterForm>
+      </Container>
     </>
   )
     
