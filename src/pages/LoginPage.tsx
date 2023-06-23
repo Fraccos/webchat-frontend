@@ -6,14 +6,17 @@ import { User } from '../types/User';
 
 interface LoginProps {
   currentUser: User
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>
+  handleUserUpdate: (user:User, token: string) => void
 }
 
 const LoginPage: React.FC<LoginProps> = (props) => {
   return (
     <>
       <Container sx={{padding:"50px"}}>
-        <LoginForm currentUser={props.currentUser} setCurrentUser={props.setCurrentUser}/>
+        <LoginForm 
+          currentUser={props.currentUser} 
+          handleUserUpdate={props.handleUserUpdate}
+        />
       </Container>
     </>
   )

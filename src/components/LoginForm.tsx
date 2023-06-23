@@ -2,34 +2,60 @@ import { Box, Button, Container, FormLabel, IconButton, InputAdornment, InputLab
 import React, { useState } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User } from '../types/User';
 import { Check } from '@mui/icons-material';
+import { cAPIWrapper } from '../services/HttpWrapper';
 
 interface LoginFormProps {
     currentUser: User
-    setCurrentUser: React.Dispatch<React.SetStateAction<User>>
+    handleUserUpdate: (user:User, token: string) => void
 }
 
+type UserInput = {
+    email:string
+    password: string,
 
+}
 const LoginForm: React.FC<LoginFormProps> = (props) => {
 
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState<string>();
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const [User, setUser] = useState<User>({username:"", email:""});
+    const [input, setInput] = useState<UserInput>({email:"", password:""});
+
+    const navigate = useNavigate();
 
     const handleSubmit=(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        props.setCurrentUser(User)
+        cAPIWrapper.post("/users/login", {
+            data: input
+        }).then(
+            (res) => {
+                if (res.status === 200) {
+                    props.handleUserUpdate(res.data.user, res.data.token);
+                    navigate("/");
+                }
+                else {
+                    setError(res.data.msg);
+                }
+            }
+        ).catch( (e) => {
+            setError(e);
+        })
+
+        
     }
 
-    const checkLogin=()=>{
-        let UserKey=Object.keys(User)
+    const isFormFilled=()=>{
         let errorFound = false; 
-        if (User.email.length===0){
-            errorFound = true;
+        if (input.email.length === 0){
+            return false;
         } 
-        return errorFound
+        else if (input.password.length === 0) {
+            return false;
+        }
+        return true;
       }
       
     
@@ -49,10 +75,12 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     <TextField 
                     sx={{width:"270px"}} 
                     label="Email" variant="outlined"
-                    value={User.email} onChange={(e)=>{setUser({...User, email:e.target.value})}}/>
+                    value={input.email} onChange={(e)=>{setInput({...input, email:e.target.value})}}/>
                 </Box>
                 <Box>
                     <TextField type={showPassword ? 'text' : 'password'} variant="outlined" label="Password"
+                        value={input.password}
+                        onChange={(e)=>{setInput({...input, password:e.target.value})}}
                         InputProps={{ 
                         endAdornment: (
                         <InputAdornment position="end">
@@ -75,7 +103,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     </Button>
                 </Stack>
                 <Button
-                    variant="outlined" type="submit" disabled={checkLogin()} >
+                    variant="outlined" type="submit" disabled={!isFormFilled()} >
                     Login
                 </Button>
             </Stack>  
