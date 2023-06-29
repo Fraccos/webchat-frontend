@@ -30,9 +30,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
     const prevChat = usePreviousValue<Chatroom>(currentChat);
     useEffect(()=>{
         if (prevChat !== undefined) {
-            
             if (prevChat._id === currentChat._id) {
-                
                 if (scrollPrc >= 70) {
                     const msgContainerEl = messageContainerRef.current;
                     if (msgContainerEl) {
