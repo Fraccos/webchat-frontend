@@ -5,27 +5,31 @@ import { User } from '../types/User';
 import { Link } from 'react-router-dom';
 
 interface RegisterFormProps {
-    currentUser: User
-    setCurrentUser: React.Dispatch<React.SetStateAction<User>>
+
+}
+
+type userForm = {
+    email: string,
+    username: string,
+    password: string,
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const [User, setUser] = useState<User>({username:"", email:""});
+    const [userForm, setUserForm] = useState<userForm>({email: "", password:"", username: ""});
 
     const handleSubmit=(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        props.setCurrentUser(User)
     }
 
     const checkRegister=()=>{
-        let UserKey=Object.keys(User)
+        let UserKey=Object.keys(userForm)
         let errorFound = false; 
-        if (User.email.length===0){
+        if (userForm.email.length===0){
             errorFound = true;
-        } else if (User.username.length===0){
+        } else if (userForm.username.length===0){
             errorFound = true;
         }
         return errorFound
@@ -45,15 +49,17 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                 <Box>
                     <TextField 
                         sx={{width:"270px"}} label="Username" variant="outlined"
-                        value={User.username} onChange={(e)=>{setUser({...User, username:e.target.value})}}/>
+                        value={userForm.username} onChange={(e)=>{setUserForm({...userForm, username:e.target.value})}}/>
                 </Box>
                 <Box>
                     <TextField 
                         sx={{width:"270px"}} label="Email" variant="outlined"
-                        value={User.email} onChange={(e)=>{setUser({...User, email:e.target.value})}}/>
+                        value={userForm.email} onChange={(e)=>{setUserForm({...userForm, email:e.target.value})}}/>
                 </Box>
                 <Box>
                     <TextField type={showPassword ? 'text' : 'password'} variant="outlined" label="Password"
+                        value={userForm.password}
+                        onChange={(e)=> setUserForm({...userForm, password: e.target.value} )}
                         InputProps={{ 
                         endAdornment: (
                         <InputAdornment position="end">

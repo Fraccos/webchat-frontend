@@ -3,6 +3,7 @@ import RecentChats from './RecentChats';
 import Searchbar from './Searchbar';
 import { styled } from '@mui/material';
 import HeaderSidebar from './HeaderSidebar';
+import { Chatroom } from '../types/Chatroom';
 
 const SidebarWrapper = styled('div')(({ theme }) => ({
     backgroundColor: 'pink',
@@ -10,15 +11,17 @@ const SidebarWrapper = styled('div')(({ theme }) => ({
 }));
 
 interface SidebarProps {
-
+    chatrooms: Chatroom[]
 }
 
-const Sidebar: React.FC<SidebarProps> = ({  }) => {
+const Sidebar: React.FC<SidebarProps> = ({ chatrooms }) => {
     return (
         <>
             <SidebarWrapper>
                 <HeaderSidebar/>
-                <RecentChats/>
+                <RecentChats
+                    chatrooms={chatrooms}
+                />
             </SidebarWrapper>
         </>
     );

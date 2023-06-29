@@ -8,7 +8,6 @@ import { Check } from '@mui/icons-material';
 import { cAPIWrapper } from '../services/HttpWrapper';
 
 interface LoginFormProps {
-    currentUser: User
     handleUserUpdate: (user:User, token: string) => void
 }
 
@@ -49,12 +48,16 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
     const isFormFilled=()=>{
         let errorFound = false; 
+        const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+\.[A-z]+$/);
         if (input.email.length === 0){
             return false;
         } 
         else if (input.password.length === 0) {
             return false;
         }
+        else if (!emailRegex.test(input.email)) {
+            return false;
+        }   
         return true;
       }
       
@@ -75,6 +78,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     <TextField 
                     sx={{width:"270px"}} 
                     label="Email" variant="outlined"
+                    type="email"
                     value={input.email} onChange={(e)=>{setInput({...input, email:e.target.value})}}/>
                 </Box>
                 <Box>

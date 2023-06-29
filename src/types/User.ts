@@ -3,5 +3,6 @@ export interface User {
     email: string,
     bio?: string,
     avatar?: string,
+    _id?: string,
 }
 

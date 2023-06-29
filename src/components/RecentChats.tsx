@@ -1,17 +1,19 @@
 import React from 'react';
 import ChatPreview from './ChatPreview';
 import { List } from '@mui/material';
+import { Chatroom } from '../types/Chatroom';
 
 interface RecentChatsProps {
-    
+    chatrooms: Chatroom[]
 }
 
-const RecentChats: React.FC<RecentChatsProps> = ({  }) => {
+const RecentChats: React.FC<RecentChatsProps> = ({ chatrooms }) => {
     return (
         <List sx={{'width': '100%', 'paddingTop': '0'}}>
-            {[1,2,3,4].map( el => 
+            {chatrooms.map( room => 
                 <ChatPreview
-                    key={el}
+                    key={room._id}
+                    chatroom={room}
                 />
             )}
 
