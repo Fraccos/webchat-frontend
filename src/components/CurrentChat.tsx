@@ -27,20 +27,30 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
         });
         return ref.current;
     }
+
     const prevChat = usePreviousValue<Chatroom>(currentChat);
+
+    const scrollToBottom = () => {
+        const msgContainerEl = messageContainerRef.current;
+        if (msgContainerEl) {
+            msgContainerEl.scrollTop = msgContainerEl.scrollHeight;
+        }    
+    }
+
     useEffect(()=>{
         if (prevChat !== undefined) {
             if (prevChat._id === currentChat._id) {
-                if (scrollPrc >= 70) {
-                    const msgContainerEl = messageContainerRef.current;
-                    if (msgContainerEl) {
-                        msgContainerEl.scrollTop = msgContainerEl.scrollHeight;
-                    }
+                if (scrollPrc >= 80) {
+                    scrollToBottom();
                 }
             }
         }        
     }, [currentChat.messages.length])
 
+
+    useEffect(()=>{
+        scrollToBottom();
+    }, [currentChat._id])
 
     const handleMsgClick = (event: React.MouseEvent<HTMLElement>) => {
         setMsgMenuAchor(event.currentTarget);
