@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeaderSidebar from '../components/HeaderSidebar';
 import Sidebar from '../components/Sidebar';
 import { Container, Grid } from '@mui/material';
 import MainContent from '../components/MainContent';
 import { Chatroom } from '../types/Chatroom';
 import { User } from '../types/User';
+import { useParams } from 'react-router-dom';
+import NewChatroom from '../components/modals/NewChatroomModal';
 
 
 interface HomeProps {
@@ -17,26 +19,50 @@ interface HomeProps {
 
 const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth }) => {
   requireAuth();
+  const [isNewChatModalOpen, setNewChatModalOpen] = useState(false);
+  const { chatid } = useParams();
   if (user === undefined) {
     return <></>
   }
+  let currentChat: undefined | Chatroom = undefined;
+  if (chatid !== undefined) {
+    currentChat = chatrooms.find( el => el._id === chatid);
+  }
 
+  
+  const toggleNCModel = () => {
+    setNewChatModalOpen((prev)=>!prev);
+  }
+  const lastCreatedChatrooms = ():Chatroom[] => {
+    if (chatrooms) {
+      return chatrooms;
+    }
+    return chatrooms;
+  }
   return (
     <>
       <div>
         <Grid container spacing={0.5}>
           <Grid xs={6} md={4}>
             <Sidebar 
-              chatrooms={chatrooms}
+              currentChat={currentChat}
+              currentUser={user}
+              chatrooms={lastCreatedChatrooms()}
+              toggleNCModel={toggleNCModel}
             />  
           </Grid>
           <Grid xs={6} md={8}>
             <MainContent
+              currentChat={currentChat}
               chatrooms={chatrooms}
               user={user}
             />
           </Grid>
         </Grid>
+        <NewChatroom 
+          currentUser={user}
+          open={isNewChatModalOpen} toggleOpen={toggleNCModel}
+          ></NewChatroom>
       </div>
     </>
   )

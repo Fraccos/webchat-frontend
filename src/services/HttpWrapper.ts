@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const backendURL = "https://localhost:8080";
+export const backendURL = "https://localhost:8080/api";
 export type methodHTTP = "POST" | "GET" | "PUT" | "DELETE";
 export class cAPIWrapper {
     static req(dst:String, method:methodHTTP, params?:any)  {

@@ -7,19 +7,18 @@ import { User } from '../types/User';
 
 interface MainContentProps {
     chatrooms: Chatroom[]
+    currentChat: Chatroom | undefined,
     user:User
 }
 
-const MainContent: React.FC<MainContentProps> = ({ chatrooms, user }) => {
-    let currentChat: undefined | Chatroom = undefined;
-    const { chatid } = useParams();
-    if (chatid !== undefined) {
-        currentChat = chatrooms.find( el => el._id === chatid);
-    }
+const MainContent: React.FC<MainContentProps> = ({ chatrooms, user, currentChat }) => {
+    
     
     return (
         <>
-            <Chatbar/>
+            <Chatbar
+                currentChat={currentChat}
+            />
             {currentChat ? <CurrentChat
                 user={user}
                 currentChat={currentChat}

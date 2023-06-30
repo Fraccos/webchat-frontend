@@ -5,6 +5,7 @@ import { User } from '../types/User';
 import { Box, InputAdornment, Menu, MenuItem, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { cAPIWrapper } from '../services/HttpWrapper';
+import MessageWrapper from './MessageWrapper';
 
 interface CurrentChatProps {
     currentChat: Chatroom
@@ -40,7 +41,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
     useEffect(()=>{
         if (prevChat !== undefined) {
             if (prevChat._id === currentChat._id) {
-                if (scrollPrc >= 80) {
+                if (scrollPrc >= 70) {
                     scrollToBottom();
                 }
             }
@@ -106,7 +107,8 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
                 onScroll={(e) => handleScrollChange(e)}
                 style={{flex : "1 1 0", overflowY: "scroll", marginBottom: "10px"}}>
                 {currentChat.messages.map(msg => 
-                <PrivateMessage 
+                    <MessageWrapper 
+                        chatType={currentChat.type ?? "single"}
                         message={msg}
                         handleMsgClick={handleMsgClick}
                         user={user}               />
@@ -118,7 +120,6 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <TextField
                         sx={{width: "100%"}}
-                        name="newMsg"
                         value={msgInput}
                         onChange={(e)=> setMsgInput(e.target.value)}
                         placeholder='Invia un messaggio'

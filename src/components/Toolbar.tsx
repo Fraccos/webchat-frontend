@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import MUIToolbar from '@mui/material/Toolbar';
@@ -8,15 +8,26 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Menu, MenuItem, Stack } from '@mui/material';
 import Searchbar from './Searchbar';
-
+import { Chatroom } from '../types/Chatroom';
+import AddIcon from '@mui/icons-material/Add';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import FriendsModal from './modals/FriendsModal';
+import { User } from '../types/User';
 
 interface ToolbarProps {
-
+  currentChat? : Chatroom
+  currentUser: User;
 }
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const Toolbar: React.FC<ToolbarProps> = ({  }) => {
+const Toolbar: React.FC<ToolbarProps> = ({currentUser  }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  const [showFriendsModal, setShowFriendsModal] = useState(false);
+
+  const handleFriendModalToggle = () => {
+    setShowFriendsModal( (prev) => !prev);
+  }
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -42,7 +53,15 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
                   <Searchbar/>
                 </Typography>
-
+                <IconButton
+                  size="medium"
+                  edge="end"
+                  sx={{marginLeft: "10px"}}
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={handleFriendModalToggle}>
+                  <PeopleAltIcon/>
+                </IconButton>
 
                 <Menu
                   sx={{ mt: '45px' }}
@@ -75,10 +94,13 @@ const Toolbar: React.FC<ToolbarProps> = ({  }) => {
               </MUIToolbar>
             </AppBar>
           </Stack>
+          <FriendsModal 
+            open={showFriendsModal} 
+            toggleOpen={handleFriendModalToggle}
+            currentUser={currentUser}
+          ></FriendsModal>
         </>
     );
 };
-//le scelte grafice sono ancora temporanee
-//riga 66
 
 export default Toolbar;

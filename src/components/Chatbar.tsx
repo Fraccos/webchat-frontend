@@ -8,26 +8,27 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchIcon from '@mui/icons-material/Search';
+import { Chatroom } from '../types/Chatroom';
+import AvatarWrapper from './AvatarWrapper';
 
 interface ChatbarProps {
-
+  currentChat : Chatroom | undefined;
 }
 
-const Chatbar: React.FC<ChatbarProps> = ({  }) => {
+const Chatbar: React.FC<ChatbarProps> = ({ currentChat }) => {
     return (
         <>
             <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static"
               sx={{justifyContent:"center", flexDirection:"column", display:"flex", height:"80px" }}>
-              <MUIToolbar>
+              {(currentChat && currentChat.name !== undefined )  &&  <MUIToolbar>
                 <IconButton 
                   color="inherit"
                   size="large">
-                  <AccountCircleIcon 
-                    fontSize='large'/>
+                  <AvatarWrapper name={currentChat.name}/>
                 </IconButton>
                 <Box sx={{ flexGrow: 1 }}>
-                  <h3>NOME CHAT</h3>
+                  <h3>{currentChat.name}</h3>
                 </Box>
                 <IconButton
                   color="inherit">
@@ -41,7 +42,7 @@ const Chatbar: React.FC<ChatbarProps> = ({  }) => {
                   sx={{justifyContent: 'right', display: 'flex'}}>
                   <MoreVertIcon/>
                 </IconButton>
-              </MUIToolbar>
+              </MUIToolbar>}
             </AppBar>
           </Box>
         </>

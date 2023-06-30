@@ -15,7 +15,7 @@ const PrivateMessage: React.FC<PrivateMessageProps> = ({ message,user,handleMsgC
         throw new Error("Sender undefined");
     }
     let posFlexbox = isSentByUser ? "end": "start";
-    let color = isSentByUser?"#06a082":"gray" ; 
+    let color = isSentByUser?"#28d5b3":"#bbbbbb" ; 
     return (
         <>
             <Box 

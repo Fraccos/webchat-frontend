@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { socket } from './services/socket';
 import { Socket, io } from 'socket.io-client';
 import { Chatroom, Message } from './types/Chatroom';
+import { Box, CircularProgress } from '@mui/material';
 
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
   const [JWT, setJWT] = useState<string>("")
   const [currentUser, setCurrentUser] = useState<User>();
   
+  const [isLoading, setLoading] = useState(false);
+
   const [isSocketConnected, setSocketConnected] = useState(false);
 
   const [chatrooms, setChatrooms] = useState<Chatroom[]>([])
@@ -43,6 +46,12 @@ function App() {
     
   }
 
+  const onChatroomCreated = (data: any) => {
+    const newChatroom = data as Chatroom;
+    console.log(data);
+    setChatrooms([...chatrooms, newChatroom]);
+  }
+
   const initSocket = () => {
     const URL = "http://localhost:5000";
 
@@ -62,14 +71,17 @@ function App() {
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('pushedMessage', onPushedMessage);
+    socket.on('chatroomCreated', onChatroomCreated)
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('pushedMessage', onPushedMessage);
+      socket.off('chatroomCreated', onChatroomCreated)
     };
   }
 
   const initUser = () => {
+    setLoading(true);
     cAPIWrapper.post("/users/jwt/create").then(
       (res) => {
         handleUserUpdate(res.data.user, res.data.token);
@@ -77,6 +89,7 @@ function App() {
     ).catch( (er:AxiosError) => {
       if (er.response) {
         if (er.response.status === 401) {
+          setLoading(false);
           navigate("/login");
         }
       } 
@@ -91,6 +104,7 @@ function App() {
 
 
   useEffect( () => {
+    setLoading(true);
     if (JWT.length > 0) {
       cAPIWrapper.get("/chats/latestedited/0").then((res)=> {
         try {
@@ -99,6 +113,8 @@ function App() {
           initSocket();
         } catch (e) {
           console.error(e);
+        } finally {
+          setLoading(false);
         }
       })
     }
@@ -106,7 +122,7 @@ function App() {
 
   return (
     <div className="App">
-      <Routes> 
+      {!isLoading ? <Routes> 
         <Route path="/:chatid?" element={
           <HomePage
             chatrooms={chatrooms}
@@ -116,6 +132,19 @@ function App() {
         <Route path="/login" element={<LoginPage handleUserUpdate={handleUserUpdate}/>} />
         <Route path="/register" element={<RegisterPage />}/>
       </Routes>
+      :
+      <Box 
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          size:"20vw",
+          height: "100vh",
+          width: "100vw"
+        }}>
+        <CircularProgress />
+      </Box>
+      } 
     </div>
   );
 }
