@@ -1,19 +1,22 @@
 import React from 'react';
-import { Message } from '../types/Chatroom';
+import { Chatroom, Message } from '../types/Chatroom';
 import { Avatar, Box, IconButton, Stack, Tooltip, withStyles } from '@mui/material';
 import { User } from '../types/User';
 import AvatarWrapper from './AvatarWrapper';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface GroupMessageProps {
     message: Message;
     user: User;
     usernamesMap: any;
     handleMsgClick: (event: React.MouseEvent<HTMLElement>) => void;
+    chat: Chatroom;
 }
 
 
 
-const GroupMessage: React.FC<GroupMessageProps> = ({ message,user,handleMsgClick,usernamesMap }) => {
+const GroupMessage: React.FC<GroupMessageProps> = ({ message,user,handleMsgClick,usernamesMap,chat }) => {
     const isSentByUser = user._id === message.sender;
     if (message.sender === undefined) {
         throw new Error("Sender undefined");
@@ -21,6 +24,21 @@ const GroupMessage: React.FC<GroupMessageProps> = ({ message,user,handleMsgClick
     let posFlexbox = isSentByUser ? "end": "start";
     let color = isSentByUser?"#28d5b3":"#bbbbbb" ; 
 
+    const isMsgReaded =  (msg: Message) => {
+        const usersRead = chat.members?.filter( u => u != user._id );
+        if (usersRead !== undefined) {
+            const lastReadTimeArray = usersRead.map(u => new Date(chat.lastRead[u ??""]).getTime());
+            let read = true;
+            const msgCreationTime = new Date(msg.created).getTime();
+            lastReadTimeArray.forEach( readedTime => {
+                if (readedTime < msgCreationTime) {
+                    read = false
+                }
+            })
+            return read;
+        }
+        return false;
+    }
     return (
         <>
                     <Box 
@@ -50,11 +68,20 @@ const GroupMessage: React.FC<GroupMessageProps> = ({ message,user,handleMsgClick
                 }}>
                     <div onClick={(e)=>handleMsgClick(e)}>
                         {message.content.map(chunk => <p style={{margin:"0"}}>{chunk.value}</p>)}
-                        <span style={{float: "right" , fontSize:"12px"}}>
-                            {new Date(message.created).toLocaleTimeString("it-it", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                            }) }</span>
+                        <Box sx={{display: "flex", flexDirection: "row", alignContent:"center", alignItems:"center", width: "100%"}}>
+                            <Box sx={{justifySelf: "start"}}>
+                                {isMsgReaded(message) ? <DoneAllIcon color='primary'/> :  <CheckIcon/>}
+                            </Box>
+                            <Box sx={{justifySelf:"end", flexGrow: 1}}>
+                                <span style={{float: "right" , fontSize:"12px"}}>
+                                {new Date(message.created).toLocaleTimeString("it-it", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        
+                                }) }</span>
+                            </Box>
+                            
+                        </Box>
                     </div>
                 </Box>
             </Box>

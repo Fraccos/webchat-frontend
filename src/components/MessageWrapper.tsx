@@ -47,6 +47,7 @@ const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user
                             message={message}
                             handleMsgClick={handleMsgClick}
                             usernamesMap={usernamesMap}
+                            chat={chat}
                             user={user}  ></GroupMessage>
                     }
                     </>

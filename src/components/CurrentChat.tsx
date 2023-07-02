@@ -71,8 +71,9 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
     }, [currentChat._id])
 
     const handleMsgClick = (event: React.MouseEvent<HTMLElement>) => {
+        /* Per l'implementazione possibile del elimina rimuovi commento
         setMsgMenuAchor(event.currentTarget);
-        setMenuOpen(!isMenuOpen);
+        setMenuOpen(!isMenuOpen);*/
     }
     const handleMenuClose = () => {
         setMenuOpen(false);
