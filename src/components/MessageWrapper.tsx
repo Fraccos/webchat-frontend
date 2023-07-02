@@ -12,9 +12,10 @@ interface MessageWrapperProps {
     user?: User;
     usernamesMap:any
     handleMsgClick?: (event: React.MouseEvent<HTMLElement>) => void;
+    filterMsg: string;
 }
 
-const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user, handleMsgClick,usernamesMap }) => {
+const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user, handleMsgClick,usernamesMap,filterMsg }) => {
     const isInfoMessage = (msg: Message) => {
         const content = msg.content;
         if (msg.content.length === 1) {
@@ -24,6 +25,8 @@ const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user
         }
         return false;
     }
+ 
+    
     return (
         <>
             {isInfoMessage(message) ? 

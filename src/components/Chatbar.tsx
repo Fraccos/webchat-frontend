@@ -13,14 +13,18 @@ import AvatarWrapper from './AvatarWrapper';
 import { ListItemButton } from '@mui/material';
 import ChatroomInfoModal from './modals/ChatroomInfoModal';
 import { User } from '../types/User';
+import Searchbar from './Searchbar';
+import SearchMessage from './SearchMessage';
 
 interface ChatbarProps {
   currentChat : Chatroom | undefined;
   user: User;
   usernamesMap: any
+  filterMsg: string,
+  updateFilterMsg: (msg:string) => void
 }
 
-const Chatbar: React.FC<ChatbarProps> = ({ currentChat,user ,usernamesMap}) => {
+const Chatbar: React.FC<ChatbarProps> = ({ currentChat,user ,usernamesMap, filterMsg, updateFilterMsg}) => {
     const [isInfoModalOpen, setInfoModalOpen] = useState(false);
     const toggleModal = () => setInfoModalOpen( (prev) => !prev);
     return (
@@ -39,18 +43,10 @@ const Chatbar: React.FC<ChatbarProps> = ({ currentChat,user ,usernamesMap}) => {
                     <h3>{currentChat.name}</h3>
                   </Box>
                 </ListItemButton>
-                <IconButton
-                  color="inherit">
-                  <SearchIcon />
-                </IconButton>
-                <IconButton
-                  size="medium"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{justifyContent: 'right', display: 'flex'}}>
-                  <MoreVertIcon/>
-                </IconButton>
+                <SearchMessage
+                  filterMsg={filterMsg}
+                  updateFilterMsg={updateFilterMsg}
+                />
               </MUIToolbar>}
             </AppBar>
           </Box>

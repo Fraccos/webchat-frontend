@@ -15,6 +15,7 @@ import FriendsModal from './modals/FriendsModal';
 import { User } from '../types/User';
 import AvatarWrapper from './AvatarWrapper';
 import { FriendshipRequest } from '../types/FriendshipRequest';
+import { cAPIWrapper } from '../services/HttpWrapper';
 
 interface ToolbarProps {
   currentChat? : Chatroom
@@ -25,7 +26,6 @@ interface ToolbarProps {
   updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
   friends: User[];
 }
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpdate,friendshipsReq,updateFriendshipsReq, friends  }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -43,6 +43,12 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpd
     setAnchorElUser(null);
   };
 
+  const runLogout = () => {
+    cAPIWrapper.post("/users/logout").then(res=> {
+        window.location.reload();
+    })
+    handleCloseUserMenu();
+  } 
     return (
         <>
           <Stack sx={{ flexGrow: 1}} >
@@ -94,11 +100,9 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpd
                   <MenuItem sx={{display: "flex", flexDirection:"row", justifyContent:"center", alignContent: "center"}}>
                       <Typography textAlign="center"><strong style={{textAlign: 'center'}}>{currentUser.username}</strong></Typography>
                     </MenuItem>
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
+                    <MenuItem  onClick={()=>runLogout()}>
+                      <Typography textAlign="center">Logout</Typography>
                     </MenuItem>
-                  ))}
                 </Menu>
               </MUIToolbar>
             </AppBar>

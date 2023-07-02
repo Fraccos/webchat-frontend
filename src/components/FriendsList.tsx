@@ -33,9 +33,10 @@ const FriendsList: React.FC<FriendsListProps> = ({ currentUser,toggleDelDialog,s
             }
         } ).then(
             //res => setFriends(res.data)
-        ).finally( ()=>
+        ).finally( ()=> {
+            toggleDelDialog();
             setLoading(false)
-        )
+        })
         
     }
     return (

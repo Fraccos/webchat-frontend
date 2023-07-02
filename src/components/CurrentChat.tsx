@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Chatroom } from '../types/Chatroom';
+import { Chatroom, Message } from '../types/Chatroom';
 import PrivateMessage from './PrivateMessage';
 import { User } from '../types/User';
-import { Box, InputAdornment, Menu, MenuItem, TextField } from '@mui/material';
+import { Alert, Box, InputAdornment, Menu, MenuItem, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { cAPIWrapper } from '../services/HttpWrapper';
 import MessageWrapper from './MessageWrapper';
@@ -10,10 +10,11 @@ import MessageWrapper from './MessageWrapper';
 interface CurrentChatProps {
     currentChat: Chatroom
     user:User
+    filterMsg: string,
     usernamesMap: any
 }
 
-const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesMap }) => {
+const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesMap, filterMsg }) => {
     const [msgInput, setMsgInput] = useState("");
     const [msgMenuAnchor, setMsgMenuAchor] = useState<HTMLElement>();
     const [isMenuOpen, setMenuOpen] = useState(false)
@@ -21,7 +22,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
     const [scrollPrc, setScrollPrc] = useState(0);
     
     const messageContainerRef = useRef<HTMLDivElement>(null);
-    
+
     const usePreviousValue = <T,> (value: T) => {
         const ref = useRef<T>();
         useEffect(() => {
@@ -86,6 +87,36 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
         const el = e.currentTarget;
         setScrollPrc( (el.scrollTop/ el.scrollHeight) * 100);
     }
+    const isInfoMessage = (msg: Message) => {
+        const content = msg.content;
+        if (msg.content.length === 1) {
+            if (msg.content[0].type === "notification") {
+                return true;
+            }
+        }
+        return false;
+    }
+ 
+
+    const keepMsgAfterFilter = (msg: Message) => {
+        if (filterMsg.length > 0) {
+            let keep = false;
+            msg.content.forEach(chunk => {
+                if (chunk.value.includes(filterMsg)) {
+                    keep=true;
+                }
+            })
+            let containsUsername = false;
+            if (msg.sender) {
+                containsUsername = usernamesMap[msg.sender].includes(filterMsg);
+            }
+            return keep || containsUsername;
+        }
+        return true;
+    }
+
+    const filteredMessages = currentChat.messages.filter(msg => keepMsgAfterFilter(msg));
+
     return (
         <Box sx={{
             display: "flex",
@@ -108,14 +139,16 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
                 ref={messageContainerRef}
                 onScroll={(e) => handleScrollChange(e)}
                 style={{flex : "1 1 0", overflowY: "scroll", marginBottom: "10px"}}>
-                {currentChat.messages.map(msg => 
+                {filteredMessages.length !== 0 ? filteredMessages.map(msg => 
                     <MessageWrapper 
                         chatType={currentChat.type ?? "single"}
                         message={msg}
                         usernamesMap={usernamesMap}
+                        filterMsg={filterMsg}
                         handleMsgClick={handleMsgClick}
                         user={user}               />
-                )}
+                ) :  <Alert severity="warning">
+                Nessuna messaggio soddisfa il filtro</Alert>}
 
 
             </div>

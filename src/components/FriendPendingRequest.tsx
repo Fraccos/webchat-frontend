@@ -30,8 +30,9 @@ const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUse
                 requestID: reqId
             },
         }).then(
-            (res) => updateFriendshipsReq( friendshipsReq.filter(r => r._id.toString() !== reqId) )
-        ).finally(
+            (res) => {
+                updateFriendshipsReq( friendshipsReq.filter(r => r._id.toString() !== reqId) )
+        }).finally(
             ()=>setLoading(false)
         )
     }

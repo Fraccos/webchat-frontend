@@ -2,34 +2,58 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, Button, IconButton, InputAdornment, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { User } from '../types/User';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { cAPIWrapper } from '../services/HttpWrapper';
 
 interface RegisterFormProps {
-
 }
 
 type userForm = {
     email: string,
     username: string,
     password: string,
+    passwordConfirm: string
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
-
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const [userForm, setUserForm] = useState<userForm>({email: "", password:"", username: ""});
+    const [error, setError] = useState<string>();
+    const [userForm, setUserForm] = useState<userForm>({email: "", password:"", username: "", passwordConfirm: ""});
+
+    const navigate = useNavigate();
 
     const handleSubmit=(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
+        cAPIWrapper.post("/users/register", {
+            data: userForm
+        }).then(
+            (res) => {
+                if (res.status === 200) {
+                    navigate("/login");
+                }
+                else {
+                    setError(res.data.msg);
+                }
+            }
+        ).catch( (e) => {
+            setError(e);
+        })
     }
 
     const checkRegister=()=>{
         let UserKey=Object.keys(userForm)
         let errorFound = false; 
+        const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+\.[A-z]+$/);
         if (userForm.email.length===0){
             errorFound = true;
         } else if (userForm.username.length===0){
+            errorFound = true;
+        }
+        else if (!emailRegex.test(userForm.email)) {
+            errorFound = true;
+        }   
+        else if (userForm.passwordConfirm !== userForm.password) {
             errorFound = true;
         }
         return errorFound
@@ -72,6 +96,8 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                 </Box>
                 <Box>
                     <TextField type={showPassword ? 'text' : 'password'} variant="outlined" label="Conferma password"
+                        value={userForm.passwordConfirm}
+                        onChange={(e)=> setUserForm({...userForm, passwordConfirm: e.target.value} )}
                         InputProps={{ 
                         endAdornment: (
                         <InputAdornment position="end">

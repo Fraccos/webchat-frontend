@@ -6,7 +6,6 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { User } from './types/User';
-import ChatPage from './pages/ChatPage';
 import { cAPIWrapper } from './services/HttpWrapper';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +16,9 @@ import { Alert, AlertColor, Box, CircularProgress, Snackbar } from '@mui/materia
 import NotificationService, { NotifyMessage, notifyCallback } from './services/NotificationService';
 import NewChatroom from './components/modals/NewChatroomModal';
 import { FriendshipRequest } from './types/FriendshipRequest';
+import TeamPage from './pages/TeamPage';
+import StepperModal from './components/modals/StepperModal';
+import StepperTutorial from './components/StepperTutorial';
 
 
 function App() {
@@ -35,6 +37,7 @@ function App() {
   const [showNotication, setShowNotification] = useState(false); 
   const [pendingReq, setPendingReq] = useState<FriendshipRequest[]>([]);
   const [friends, setFriends] = useState<User[]>([]);
+  const [showStepper, setStepper] = useState(false);
 
   const updateFriendshipsReq = (newReqs: FriendshipRequest[]) => {
     setPendingReq(newReqs);
@@ -48,6 +51,13 @@ function App() {
     NotificationService.serveAsDispachter(addNotification);
   },[])
   
+  const displayStepper = () => {
+    if (localStorage.getItem("first-access") === null) {
+      setStepper(true);
+      localStorage.setItem("first-access", new Date().toISOString())
+    }
+  }
+
   useEffect(()=>{
     //Verifica se dispone delle info (gli username)
     const missingUserSet = new Set<string>();
@@ -140,10 +150,33 @@ function App() {
     })
   }
 
+  const onNewFriend = (data:any) => {
+    const fR = data as FriendshipRequest;
+    const newFriend: User = fR.receiver._id?.toString() === currentUser?._id?.toString() ? fR.sender : fR.receiver;
+    if (fR.receiver._id?.toString() == currentUser?._id?.toString()) {
+      NotificationService.push({
+        type: "success",
+        content: <>Ora tu e {fR.receiver.username} siete amici</>,
+        insertionDate: new Date()
+      })
+    }
+    else if (fR.sender._id?.toString() == currentUser?._id?.toString()) {
+      NotificationService.push({
+        type: "success",
+        content: <>{fR.receiver.username} ha accettato la tua richiesta di amicizia</>,
+        insertionDate: new Date()
+      })
+    }
+    setFriends( (oldFriends: User[]) => [...oldFriends, newFriend]);
+  }
+
   const onRemovedFromFriends = (data: any) => {
-    const user = data as User;
+    const user = data.user as User;
     if (user._id !== undefined) {
-      setFriends( (oldFriends: User[]) => oldFriends.filter( f => user._id?.toString() !== f._id?.toString()))
+      setFriends( (oldFriends: User[]) => oldFriends.filter( f => {
+        console.log("-----   " + user._id + "  - " +  f._id);
+        return user._id?.toString() !== f._id?.toString()
+      }))
       if (data.type === "removed") {
         NotificationService.push({
           type: "error",
@@ -183,6 +216,7 @@ function App() {
     socket.on('chatroomDeleted', onChatroomDeleted);
     socket.on('chatroomCreated', onChatroomCreated);
     socket.on('newFriendshipRequest', onNewFriendshipReq)
+    socket.on('newFriend', onNewFriend);
     socket.on('removedFromFriends', onRemovedFromFriends)
     return () => {
       socket.off('connect', onConnect);
@@ -191,6 +225,7 @@ function App() {
       socket.off('chatroomCreated', onChatroomCreated)
       socket.off('chatroomDeleted', onChatroomDeleted);
       socket.off('newFriendshipRequest', onNewFriendshipReq)
+      socket.off('newFriend', onNewFriend);
       socket.off('removedFromFriends', onRemovedFromFriends)
     };
   }
@@ -233,13 +268,17 @@ function App() {
       })
       .then( () => retrivePendingFriendshipReq())
       .then( () => cAPIWrapper.get(`/users/friends/retrive/${currentUser?._id}`) )
-      .then( res => setFriends(res.data))
+      .then( res => { 
+        setFriends(res.data)
+        displayStepper()
+      })
       .then( () => initSocket() )
     }
   }, [JWT])
 
   return (
     <div className="App">
+      {showStepper && <StepperTutorial></StepperTutorial>}
         <Snackbar open={showNotication} onClose={()=>setShowNotification( prev => !prev)} anchorOrigin={{vertical:"bottom", horizontal: "right" }} autoHideDuration={10000}>
           {notification && <Alert severity={notification.type as AlertColor} sx={{ width: '100%' }}>
             {notification.content}
@@ -259,6 +298,7 @@ function App() {
           />} />
         <Route path="/login" element={<LoginPage handleUserUpdate={handleUserUpdate}/>} />
         <Route path="/register" element={<RegisterPage />}/>
+        <Route path='/team' element={<TeamPage></TeamPage>}></Route>
       </Routes>
       :
       <Box 
