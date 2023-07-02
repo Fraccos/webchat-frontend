@@ -5,6 +5,7 @@ import { Fab, styled } from '@mui/material';
 import HeaderSidebar from './HeaderSidebar';
 import { Chatroom } from '../types/Chatroom';
 import { User } from '../types/User';
+import { FriendshipRequest } from '../types/FriendshipRequest';
 
 const SidebarWrapper = styled('div')(({ theme }) => ({
     backgroundColor: '#eff3ff',
@@ -19,9 +20,10 @@ interface SidebarProps {
     currentChat: Chatroom | undefined;
     toggleNCModel: ()=>void;
     currentUser: User;
+    friendshipsReq: FriendshipRequest[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,currentUser}) => {
+const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,currentUser, friendshipsReq}) => {
     const [filterChat, setFilterChat] = useState("");
     return (
         <>
@@ -31,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,c
                     currentChat={currentChat}
                     filterChat={filterChat}
                     filterChatUpdate={(v)=>setFilterChat(v)}
-                    
+                    friendshipsReq={friendshipsReq}
                 />
                 <RecentChats 
                     toggleNCModel={toggleNCModel}

@@ -120,6 +120,16 @@ function App() {
     }) 
   }
 
+  const retrivePendingFriendshipReq = () => {
+    return cAPIWrapper.get("/friends/pendingrequest").then(
+        res => setPendingReq(res.data)
+    )
+  }
+
+  const onNewFriendshipReq = (data:any) => {
+
+  }
+
   const initSocket = () => {
     const URL = "http://localhost:5000";
 
@@ -141,13 +151,14 @@ function App() {
     socket.on('pushedMessage', onPushedMessage);
     socket.on('chatroomDeleted', onChatroomDeleted);
     socket.on('chatroomCreated', onChatroomCreated);
-    // cAPIWrapper.on('error', )
+    socket.on('newFriendshipRequest', onNewFriendshipReq)
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('pushedMessage', onPushedMessage);
       socket.off('chatroomCreated', onChatroomCreated)
       socket.off('chatroomDeleted', onChatroomDeleted);
+      socket.off('newFriendshipRequest', onNewFriendshipReq)
     };
   }
 
@@ -181,13 +192,14 @@ function App() {
           const chats = res.data.chatrooms as Chatroom[]
           setChatrooms( chats );
           setUsernamesMap(res.data.usernames);
-          initSocket();
         } catch (e) {
           console.error(e);
         } finally {
           setLoading(false);
         }
       })
+      .then( () => retrivePendingFriendshipReq())
+      .then( () => initSocket() )
     }
   }, [JWT])
 
@@ -206,6 +218,7 @@ function App() {
             requireAuth={requireAuth}
             user={currentUser}
             usernamesMap={usernamesMap}
+            friendshipsReq={pendingReq}
           />} />
         <Route path="/login" element={<LoginPage handleUserUpdate={handleUserUpdate}/>} />
         <Route path="/register" element={<RegisterPage />}/>

@@ -5,13 +5,17 @@ import FriendsList from '../FriendsList';
 import { User } from '../../types/User';
 import AddFriend from '../AddFriend';
 import FriendPendingRequest from '../FriendPendingRequest';
+import { FriendshipRequest } from '../../types/FriendshipRequest';
+import ConfirmInputDialog from '../dialogs/ConfirmInputDialog';
 
 interface FriendsModalProps extends ModalWrapperProps {
     currentUser: User;
+    friendshipsReq: FriendshipRequest[];
 }
 
-const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUser}) => {
+const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUser,friendshipsReq}) => {
     const [mode, setMode] = useState("requestList");
+    const [showDelFriendDialog, setDelFriendDialog] = useState(false);
 
     const modeList = [
         {
@@ -29,7 +33,7 @@ const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUs
     ]
     return (
         <>
-            <ModalWrapper open={open} toggleOpen={toggleOpen} >
+            <ModalWrapper open={open} toggleOpen={toggleOpen} sx={{display:  showDelFriendDialog ?  "none": "inherit"}} >
                 <Box sx={{display:'flex', justifyItems:'center'}}>
                     <ButtonGroup variant="outlined" fullWidth aria-label="outlined primary button group" sx={{width: '100%'}}>
                         {modeList.map(el => 
@@ -45,16 +49,24 @@ const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUs
                 </Box>
                 <Box sx={{marginTop: '20px'}}>
                     {mode === "friendsList" &&
-                        <FriendsList currentUser={currentUser}></FriendsList>
+                        <FriendsList 
+                            toggleDelDialog={()=>setDelFriendDialog( prev => !prev)}
+                            showDelDialog={showDelFriendDialog}
+                            currentUser={currentUser}
+                            ></FriendsList>
                     }
                     {mode === "searchFriend" &&
                         <AddFriend currentUser={currentUser}></AddFriend>
                     }
                     {mode === "requestList" &&
-                        <FriendPendingRequest currentUser={currentUser}></FriendPendingRequest>
+                        <FriendPendingRequest 
+                            currentUser={currentUser}
+                            friendshipsReq={friendshipsReq}
+                        ></FriendPendingRequest>
                     }
                 </Box>
             </ModalWrapper>
+            
         </>
     );
 };

@@ -5,12 +5,17 @@ import { User } from '../types/User';
 import { cAPIWrapper } from '../services/HttpWrapper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CenteredSpinner from './CenteredSpinner';
+import ConfirmInputDialog from './dialogs/ConfirmInputDialog';
 
 interface FriendsListProps {
     currentUser: User;
+    toggleDelDialog: () => void;
+    showDelDialog: boolean;
+
 }
 
-const FriendsList: React.FC<FriendsListProps> = ({ currentUser }) => {
+const FriendsList: React.FC<FriendsListProps> = ({ currentUser,toggleDelDialog,showDelDialog }) => {
+    const [delFriend, setDelFriend] = useState<User>();
     const [friends, setFriends] = useState<User[]>([]);
     const [isLoading, setLoading] = useState(false);
     useEffect(()=>{
@@ -22,15 +27,25 @@ const FriendsList: React.FC<FriendsListProps> = ({ currentUser }) => {
         )
     },[])
 
-    const handleRemove = (user: User) => {
+    const openDelDialog = ( u: User) => {
+        setDelFriend(u);
+        toggleDelDialog();
+    }
+
+
+    const deleteFriend = () => {
         setLoading(true)
-        cAPIWrapper.get(`/users/friends/` ).then(
-            res => setFriends(res.data)
+        cAPIWrapper.del(`/users/friends/remove`, {
+            data: {
+                oldFriend: delFriend?._id
+            }
+        } ).then(
+            //res => setFriends(res.data)
         ).finally( ()=>
             setLoading(false)
         )
+        
     }
-
     return (
         <>
             {isLoading ? <CenteredSpinner /> :
@@ -49,7 +64,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ currentUser }) => {
                         </Box>
                         <Box sx={{justifySelf: "end", alignSelf: "center"}}>
                             <Box sx={{display: "flex", flexDirection: "row"}}>
-                                <Button sx={{marginLeft: '10px'}} variant="contained" color="error" endIcon={<DeleteIcon />} onClick={()=>handleRemove(friend)}>
+                                <Button sx={{marginLeft: '10px'}} variant="contained" color="error" endIcon={<DeleteIcon />} onClick={()=>openDelDialog(friend)}>
                                     Rimuovi Amico
                                 </Button>
                             </Box>
@@ -57,6 +72,21 @@ const FriendsList: React.FC<FriendsListProps> = ({ currentUser }) => {
                     </Box>
                 </ListItem>)}
             </List>}
+           {delFriend && <ConfirmInputDialog
+                title="Elimina amico" 
+                showDialog={showDelDialog} 
+                toggleShowDialog={toggleDelDialog} 
+                onConfirmCallback={()=>deleteFriend()} 
+                textToConfirm={delFriend.username}                
+            >
+                Come precauzione, inserisci il nome dell'amico che si desidera eliminare, ovvero  <strong>{delFriend.username}</strong>
+				<Alert color="info">
+                    <strong>{delFriend.username}</strong> potrà sempre ricevere/inviare a te nuove richieste di amicizia in futuro
+				</Alert>
+                <Alert color="info" sx={{marginTop: "5px", marginBottom: "10px"}}>
+                    Le chat e i gruppi in comune con <strong>{delFriend.username}</strong> non saranno eliminati
+				</Alert>
+            </ConfirmInputDialog>}
         </>
     );
 };

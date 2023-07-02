@@ -7,6 +7,7 @@ import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContent
 import { cAPIWrapper } from '../../services/HttpWrapper';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ConfirmInputDialog from '../dialogs/ConfirmInputDialog';
 
 interface ChatroomInfoModalProps extends ModalWrapperProps {
     chat: Chatroom;
@@ -16,30 +17,20 @@ interface ChatroomInfoModalProps extends ModalWrapperProps {
 
 const ChatroomInfoModal: React.FC<ChatroomInfoModalProps> = ({ open, toggleOpen, chat, user, usernamesMap }) => {
     const [openConfirmDelete, setConfirmDelete] = useState(false);
-    const [confirmDeleteInput, setConfirmDeleteInput] = useState("");
 
-    const toggleConfirmDelete = () => {
-        setConfirmDelete( (prev) => {
-            if (!prev) {
-                setConfirmDeleteInput("")
+    const toggleConfirmDelete = () => setConfirmDelete( (prev) => !prev);
+
+    const deleteChat = ( ) => {
+        cAPIWrapper.del("/chats/delete", {
+            data : {
+                chatroomId: chat._id
+                
             }
-            return !prev;
-        })
+        }).then(res => {
+            toggleConfirmDelete();
+        }).catch( e => console.error(e))
     }
-    const handleConfirmSubmit = (e: React.FormEvent<HTMLElement>) => {
-        e.preventDefault();
-        if (confirmDeleteInput === chat.name) {
-            cAPIWrapper.del("/chats/delete", {
-                data : {
-                    chatroomId: chat._id
-                    
-                }
-            }).then(res => {
-                toggleConfirmDelete();
-            }).catch( e => console.error(e))
-        }
-    }
-    console.log(chat.owners);
+
     const canDelete = chat.type === "single" || (chat.type === "group" && chat.owners?.includes(user._id?.toString()))
 
     return (
@@ -73,34 +64,19 @@ const ChatroomInfoModal: React.FC<ChatroomInfoModalProps> = ({ open, toggleOpen,
                     </Stack>
                 </Stack>
             </ModalWrapper>
-            <Dialog open={openConfirmDelete} onClose={()=>toggleConfirmDelete()}>
-                    <DialogTitle>Elimina la chatroom</DialogTitle>
-                    <DialogContent>
-                    <DialogContentText>
-                        Come precauzione, inserisci il nome della chat che si desidera eliminare, 
-                        ovvero <strong>{chat.name}</strong>
-                        <Alert color="warning">
-                            ATTENZIONE non sarà possibile riprisitinare i messaggi una volta eliminata la chat
-                        </Alert>
-                    </DialogContentText>
-                    <form onSubmit={(e)=>handleConfirmSubmit(e)}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="confirm box"
-                            type="text"
-                            value={confirmDeleteInput}
-                            onChange={(e)=>setConfirmDeleteInput(e.target.value)}
-                            fullWidth
-                            variant="standard"
-                        />
-                        <input type="submit" style={{visibility: "hidden"}}></input>
-                    </form>
-                    </DialogContent>
-                    <DialogActions>
-                    <Button onClick={()=>toggleConfirmDelete()}>Annulla</Button>
-                    </DialogActions>
-                </Dialog>
+            {chat.name && <ConfirmInputDialog
+                title="Elimina chatroom" 
+                showDialog={openConfirmDelete} 
+                toggleShowDialog={toggleConfirmDelete} 
+                onConfirmCallback={()=>deleteChat()} 
+                textToConfirm={chat.name}                
+            >
+                Come precauzione, inserisci il nome della chat che si desidera eliminare, ovvero  <strong>{chat.name}</strong>
+				<Alert color="warning">
+					ATTENZIONE non sarà possibile riprisitinare i
+					messaggi una volta eliminata la chat
+				</Alert>
+            </ConfirmInputDialog>}
         </>
     );
 };

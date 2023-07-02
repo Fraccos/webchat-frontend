@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Menu, MenuItem, Stack, Tooltip } from '@mui/material';
+import { Badge, Menu, MenuItem, Stack, Tooltip } from '@mui/material';
 import Searchbar from './Searchbar';
 import { Chatroom } from '../types/Chatroom';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,16 +14,18 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FriendsModal from './modals/FriendsModal';
 import { User } from '../types/User';
 import AvatarWrapper from './AvatarWrapper';
+import { FriendshipRequest } from '../types/FriendshipRequest';
 
 interface ToolbarProps {
   currentChat? : Chatroom
   currentUser: User;
   filterChat: string;
+  friendshipsReq: FriendshipRequest[];
   filterChatUpdate: (v:string)=> void;
 }
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpdate  }) => {
+const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpdate,friendshipsReq  }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const [showFriendsModal, setShowFriendsModal] = useState(false);
@@ -58,17 +60,20 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpd
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
                   <Searchbar filterChat={filterChat} filterChatUpdate={filterChatUpdate}/>
                 </Typography>
-                <Tooltip title="Amicizie" arrow placement="bottom">
-                  <IconButton
-                    size="medium"
-                    edge="end"
-                    sx={{marginLeft: "10px"}}
-                    color="inherit"
-                    aria-label="menu"
-                    onClick={handleFriendModalToggle}>
-                    <PeopleAltIcon/>
-                  </IconButton>
-                </Tooltip>
+                  <Tooltip title="Amicizie" arrow placement="bottom">
+                    <IconButton
+                      size="medium"
+                      edge="end"
+                      sx={{marginLeft: "10px"}}
+                      color="inherit"
+                      aria-label="menu"
+                      onClick={handleFriendModalToggle}>
+                      <Badge badgeContent={friendshipsReq.length} color="warning">
+                        <PeopleAltIcon/>
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+               
                 <Menu
                   sx={{ mt: '45px' }}
                   id="menu-appbar"
@@ -99,6 +104,7 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpd
           <FriendsModal 
             open={showFriendsModal} 
             toggleOpen={handleFriendModalToggle}
+            friendshipsReq={friendshipsReq}
             currentUser={currentUser}
           ></FriendsModal>
         </>

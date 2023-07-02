@@ -10,20 +10,11 @@ import CenteredSpinner from './CenteredSpinner';
 
 interface FriendPendingRequestProps {
     currentUser: User
+    friendshipsReq: FriendshipRequest[];
 }
 
-const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUser }) => {
-    const [pendingReq, setPendingReq] = useState<FriendshipRequest[]>([]);
+const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUser, friendshipsReq}) => {
     const [isLoading, setLoading] = useState(false);
-
-    useEffect( ()=> {
-        setLoading(true);
-        cAPIWrapper.get("/friends/pendingrequest").then(
-            res => setPendingReq(res.data)
-        ).finally(()=>{
-            setLoading(false);
-        })
-    }, [])
 
     const handleResponse = (reqId: string, accept:boolean) => {
         let url = "/friends/acceptrequest";
@@ -36,7 +27,7 @@ const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUse
                 requestID: reqId
             }
         }).then(
-            ()=> setPendingReq(pendingReq.filter(r => r._id.toString() !== reqId.toString() ))
+            //()=> setPendingReq(friendshipsRequest.filter(r => r._id.toString() !== reqId.toString() ))
         ).finally(
             ()=>setLoading(false)
         )
@@ -46,11 +37,11 @@ const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUse
     return (
         <>  
             {isLoading ? <CenteredSpinner/> : <>
-                {pendingReq.length === 0 &&
+                {friendshipsReq.length === 0 &&
                     <Alert severity="success">Non hai nessuna richiesta di amicizia pendente</Alert>
                 }
                 <List>
-                    {pendingReq.map(req => 
+                    {friendshipsReq.map(req => 
                     <ListItem divider={true}>
                         <Box sx={{display:"flex", alignContent: "center", flexDirection: "row", width:"100%"}}>
                             <Box sx={{flexGrow: 1, display: 'flex', flexDirection:'row'}}>

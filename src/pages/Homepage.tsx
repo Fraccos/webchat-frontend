@@ -7,6 +7,7 @@ import { Chatroom } from '../types/Chatroom';
 import { User } from '../types/User';
 import { useParams } from 'react-router-dom';
 import NewChatroom from '../components/modals/NewChatroomModal';
+import { FriendshipRequest } from '../types/FriendshipRequest';
 
 
 interface HomeProps {
@@ -14,11 +15,12 @@ interface HomeProps {
   user: User | undefined
   requireAuth: () => void;
   usernamesMap: any
+  friendshipsReq: FriendshipRequest[];
 }
 
 
 
-const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap }) => {
+const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap,friendshipsReq }) => {
   requireAuth();
   const [isNewChatModalOpen, setNewChatModalOpen] = useState(false);
   const { chatid } = useParams();
@@ -50,6 +52,7 @@ const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap
               currentUser={user}
               chatrooms={lastCreatedChatrooms()}
               toggleNCModel={toggleNCModel}
+              friendshipsReq={friendshipsReq}
             />  
           </Grid>
           <Grid xs={6} md={8}>
