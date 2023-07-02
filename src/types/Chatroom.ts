@@ -21,6 +21,7 @@ export interface Chatroom {
     type?: string,
     owners?:  [User["_id"]],
     members?: [User["_id"]],
+    lastRead: any,
     messages: Message[]
 }
  

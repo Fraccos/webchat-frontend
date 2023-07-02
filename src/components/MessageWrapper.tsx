@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message } from '../types/Chatroom';
+import { Chatroom, Message } from '../types/Chatroom';
 import { Box } from '@mui/material';
 import InfoMessage from './InfoMessage';
 import PrivateMessage from './PrivateMessage';
@@ -13,9 +13,10 @@ interface MessageWrapperProps {
     usernamesMap:any
     handleMsgClick?: (event: React.MouseEvent<HTMLElement>) => void;
     filterMsg: string;
+    chat: Chatroom;
 }
 
-const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user, handleMsgClick,usernamesMap,filterMsg }) => {
+const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user, handleMsgClick,usernamesMap,filterMsg,chat }) => {
     const isInfoMessage = (msg: Message) => {
         const content = msg.content;
         if (msg.content.length === 1) {
@@ -36,6 +37,7 @@ const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user
                     <>
                     {chatType === "single" &&
                         <PrivateMessage 
+                            chat={chat}
                             message={message}
                             handleMsgClick={handleMsgClick}
                             user={user}  ></PrivateMessage>

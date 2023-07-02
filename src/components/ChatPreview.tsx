@@ -1,19 +1,20 @@
-import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
+import { Avatar, Badge, Chip, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Chatroom, Message } from '../types/Chatroom';
 import { Link, To, useNavigate, useParams } from 'react-router-dom';
 import AvatarWrapper from './AvatarWrapper';
-
-
+import { User } from '../types/User';
+import { cAPIWrapper } from '../services/HttpWrapper';
 
 interface ChatPreviewProps {
     chatroom: Chatroom;
+    currentUser: User;
 }
 
 
-const ChatPreview: React.FC<ChatPreviewProps> = ({ chatroom }) => {
+const ChatPreview: React.FC<ChatPreviewProps> = ({ chatroom,currentUser }) => {
     const getLastMsg = (chatroom:Chatroom) =>  chatroom.messages.sort((a,b) => new Date(a.created).getTime() - new Date(b.created).getTime()).slice(-1)[0];
     const { chatid } = useParams();
     const navigate = useNavigate();
@@ -36,10 +37,43 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({ chatroom }) => {
     if (lastMsg === undefined || lastMsg === null) {
         return <></>;
     }
-
+    const isInfoMessage = (msg: Message) => {
+        const content = msg.content;
+        if (msg.content.length === 1) {
+            if (msg.content[0].type === "notification") {
+                return true;
+            }
+        }
+        return false;
+    }
+    const countUnreadMessages = () => {
+        if (currentUser._id !== undefined) {
+            const lastReadDate = chatroom.lastRead[currentUser._id]
+            const lastReadTime= new Date(lastReadDate).getTime();
+            let i = 0;
+            chatroom.messages.forEach( msg => {
+                if (msg.sender?.toString() !== currentUser._id && !isInfoMessage(msg)) {
+                    if (lastReadTime < new Date(msg.created).getTime()) {
+                        i++;
+                    }    
+                }
+            })
+            return i;
+        }
+        return 0;
+    }
+    const unreadMsgCounter = countUnreadMessages();
     const isSelected = chatid !== undefined && chatid === chatroom._id;
+
+    const updateLastReaded = () => {
+        cAPIWrapper.put("/chats/updatelastread", {
+            data: {
+                chatroomId: chatroom._id
+            }
+        })
+    }
     return (
-        <Link to={"/" + chatroom._id } style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={"/" + chatroom._id } style={{ textDecoration: 'none', color: 'inherit' }} onClick={()=>updateLastReaded()}>
             <ListItemButton selected={isSelected} divider={true}>
                 <Box sx={{display:"flex", alignContent: "center", flexDirection: "row", width:"100%"}}>
                     <Box sx={{flexGrow: 1, display: 'flex', flexDirection:'row'}}>
@@ -56,7 +90,11 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({ chatroom }) => {
                             }) }
                         </Typography>
                         <Typography component="span">
-                            XX
+                            {unreadMsgCounter > 0 &&
+                                <Box sx={{display: "flex", justifyContent:"center"}}>
+                                <Chip label={unreadMsgCounter} size="small" color="primary"/>
+                                </Box>
+                            }
                         </Typography>
                     </Box>
                 </Box>

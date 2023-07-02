@@ -20,6 +20,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
     const [isMenuOpen, setMenuOpen] = useState(false)
 
     const [scrollPrc, setScrollPrc] = useState(0);
+    const [isScrolledDown, setScrolledDown] = useState(true);
     
     const messageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -38,17 +39,31 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
         if (msgContainerEl) {
             msgContainerEl.scrollTop = msgContainerEl.scrollHeight;
         }    
-    }
 
+    }
+    const updateLastReaded = () => {
+        cAPIWrapper.put("/chats/updatelastread", {
+            data: {
+                chatroomId: currentChat._id
+            }
+        })
+    }
     useEffect(()=>{
         if (prevChat !== undefined) {
             if (prevChat._id === currentChat._id) {
-                if (scrollPrc >= 70) {
+                if (isScrolledDown) {
                     scrollToBottom();
+                    updateLastReaded();
                 }
             }
         }        
     }, [currentChat.messages.length])
+
+    useEffect(()=> {
+        if (isScrolledDown) {
+            updateLastReaded();
+        }
+    }, [isScrolledDown])
 
 
     useEffect(()=>{
@@ -85,7 +100,10 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
     }
     const handleScrollChange = (e:  React.UIEvent<HTMLDivElement, UIEvent>) => {
         const el = e.currentTarget;
-        setScrollPrc( (el.scrollTop/ el.scrollHeight) * 100);
+        //50 is tolerance
+        const isScolled = el.scrollTop >= el.scrollHeight - el.clientHeight - 50;
+        setScrolledDown(isScolled);
+        //setScrollPrc( (el.scrollTop/ el.scrollHeight) * 100);
     }
     const isInfoMessage = (msg: Message) => {
         const content = msg.content;
@@ -143,6 +161,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
                     <MessageWrapper 
                         chatType={currentChat.type ?? "single"}
                         message={msg}
+                        chat={currentChat}
                         usernamesMap={usernamesMap}
                         filterMsg={filterMsg}
                         handleMsgClick={handleMsgClick}

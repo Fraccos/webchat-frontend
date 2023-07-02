@@ -20,7 +20,7 @@ const AddFriend: React.FC<AddFriendProps> = ({  currentUser  }) => {
         if (newFriend.length !== 1) {
             return false;
         }
-        if (requestText.length < 0) {
+        if (requestText.length < 1) {
             return false;
         }
         return true;

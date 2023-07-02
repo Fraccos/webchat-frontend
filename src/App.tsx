@@ -194,6 +194,21 @@ function App() {
     }
   }
 
+
+  const onUpdatedLastRead = (data: any) => {
+    const id:string = data._id;
+    const lastRead: any = data.lastRead;
+    setChatrooms(
+      (oldChatrooms: Chatroom[]) => {
+        const chat = oldChatrooms.find(c => c._id.toString() === id);
+        if (chat !== undefined) {
+          chat.lastRead = lastRead;
+        }
+        return [...oldChatrooms];
+      }
+    )
+  }
+
   const initSocket = () => {
     const URL = "http://localhost:5000";
 
@@ -218,6 +233,7 @@ function App() {
     socket.on('newFriendshipRequest', onNewFriendshipReq)
     socket.on('newFriend', onNewFriend);
     socket.on('removedFromFriends', onRemovedFromFriends)
+    socket.on("updatedLastRead", onUpdatedLastRead)
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
@@ -227,6 +243,7 @@ function App() {
       socket.off('newFriendshipRequest', onNewFriendshipReq)
       socket.off('newFriend', onNewFriend);
       socket.off('removedFromFriends', onRemovedFromFriends)
+      socket.off("updatedLastRead", onUpdatedLastRead)
     };
   }
 

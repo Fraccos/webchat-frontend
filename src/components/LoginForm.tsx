@@ -102,9 +102,6 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                             Non hai un account? Registrati 
                         </Button>
                     </Link>
-                    <Button sx={{fontSize:"8px"}}>
-                        Hai dimenticato la password?
-                    </Button>
                 </Stack>
                 <Button
                     variant="outlined" type="submit" disabled={!isFormFilled()} >

@@ -4,11 +4,13 @@ import { Alert, Box, Button, ButtonGroup, Fab, List, ListItem, ListItemButton, L
 import { Chatroom } from '../types/Chatroom';
 import AddIcon from '@mui/icons-material/Add';
 import NewChatroom from './modals/NewChatroomModal';
+import { User } from '../types/User';
 
 interface RecentChatsProps {
     chatrooms: Chatroom[]
     toggleNCModel: ()=>void
     filterChat: string
+    currentUser: User;
 }
 
 const modeList = [
@@ -27,7 +29,7 @@ const modeList = [
 ]
 
 
-const RecentChats: React.FC<RecentChatsProps> = ({ toggleNCModel,filterChat, ...props}) => {
+const RecentChats: React.FC<RecentChatsProps> = ({ toggleNCModel,filterChat,currentUser, ...props}) => {
     const [mode, setMode] = useState("all");
     const filteredChatroom = (chatrooms: Chatroom[]) =>  {
         let c = chatrooms;
@@ -100,6 +102,7 @@ const RecentChats: React.FC<RecentChatsProps> = ({ toggleNCModel,filterChat, ...
                         <ChatPreview
                             key={room._id}
                             chatroom={room}
+                            currentUser={currentUser}
                         />
                     )}
                 </Box>

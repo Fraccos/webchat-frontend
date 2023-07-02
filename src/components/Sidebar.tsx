@@ -43,6 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,c
                     toggleNCModel={toggleNCModel}
                     chatrooms={chatrooms}
                     filterChat={filterChat}
+                    currentUser={currentUser}
                 />
             </SidebarWrapper>
         </>
