@@ -3,6 +3,7 @@ import { User } from '../types/User';
 import SearchUserInput from './SearchUserInput';
 import { Box, Button, TextField } from '@mui/material';
 import { cAPIWrapper } from '../services/HttpWrapper';
+import NotificationService from '../services/NotificationService';
 
 interface AddFriendProps {
     currentUser: User; 
@@ -32,7 +33,13 @@ const AddFriend: React.FC<AddFriendProps> = ({  currentUser  }) => {
                 receiver: newFriend[0]._id,
                 message: requestText
             }
-        }).then( res=> alert("Done"))
+        }).then( res=> NotificationService.push(
+            {
+                type: "success",
+                content: "Richiesta di amicizia inviata con successo",
+                insertionDate: new Date()
+            }
+        ))
     }
 
     return (

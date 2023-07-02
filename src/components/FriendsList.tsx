@@ -11,21 +11,13 @@ interface FriendsListProps {
     currentUser: User;
     toggleDelDialog: () => void;
     showDelDialog: boolean;
+    friends: User[];
 
 }
 
-const FriendsList: React.FC<FriendsListProps> = ({ currentUser,toggleDelDialog,showDelDialog }) => {
+const FriendsList: React.FC<FriendsListProps> = ({ currentUser,toggleDelDialog,showDelDialog,friends }) => {
     const [delFriend, setDelFriend] = useState<User>();
-    const [friends, setFriends] = useState<User[]>([]);
     const [isLoading, setLoading] = useState(false);
-    useEffect(()=>{
-        setLoading(true)
-        cAPIWrapper.get(`/users/friends/retrive/${currentUser._id}` ).then(
-            res => setFriends(res.data)
-        ).finally( ()=>
-            setLoading(false)
-        )
-    },[])
 
     const openDelDialog = ( u: User) => {
         setDelFriend(u);

@@ -10,9 +10,11 @@ interface HeaderSidebarProps {
     filterChat: string;
     filterChatUpdate: (v:string)=> void;
     friendshipsReq: FriendshipRequest[];
+    updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
+    friends: User[];
 }
 
-const HeaderSidebar: React.FC<HeaderSidebarProps> = ({ currentChat, currentUser, filterChat, filterChatUpdate,friendshipsReq }) => {
+const HeaderSidebar: React.FC<HeaderSidebarProps> = ({ currentChat, currentUser, filterChat, filterChatUpdate,friendshipsReq,updateFriendshipsReq, friends }) => {
     return (
         <>
             <Toolbar
@@ -20,7 +22,9 @@ const HeaderSidebar: React.FC<HeaderSidebarProps> = ({ currentChat, currentUser,
                 currentUser={currentUser}
                 filterChat={filterChat}
                 filterChatUpdate={filterChatUpdate}
+                updateFriendshipsReq={updateFriendshipsReq}
                 friendshipsReq={friendshipsReq}
+                friends={friends}
             />
         </>
     );

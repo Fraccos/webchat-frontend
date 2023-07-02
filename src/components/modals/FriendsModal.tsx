@@ -11,9 +11,11 @@ import ConfirmInputDialog from '../dialogs/ConfirmInputDialog';
 interface FriendsModalProps extends ModalWrapperProps {
     currentUser: User;
     friendshipsReq: FriendshipRequest[];
+    updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
+    friends: User[];
 }
 
-const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUser,friendshipsReq}) => {
+const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUser,friendshipsReq, updateFriendshipsReq, friends }) => {
     const [mode, setMode] = useState("requestList");
     const [showDelFriendDialog, setDelFriendDialog] = useState(false);
 
@@ -50,6 +52,7 @@ const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUs
                 <Box sx={{marginTop: '20px'}}>
                     {mode === "friendsList" &&
                         <FriendsList 
+                            friends={friends}
                             toggleDelDialog={()=>setDelFriendDialog( prev => !prev)}
                             showDelDialog={showDelFriendDialog}
                             currentUser={currentUser}
@@ -62,6 +65,7 @@ const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUs
                         <FriendPendingRequest 
                             currentUser={currentUser}
                             friendshipsReq={friendshipsReq}
+                            updateFriendshipsReq={updateFriendshipsReq}
                         ></FriendPendingRequest>
                     }
                 </Box>

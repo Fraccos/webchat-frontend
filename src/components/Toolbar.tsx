@@ -22,10 +22,12 @@ interface ToolbarProps {
   filterChat: string;
   friendshipsReq: FriendshipRequest[];
   filterChatUpdate: (v:string)=> void;
+  updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
+  friends: User[];
 }
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpdate,friendshipsReq  }) => {
+const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpdate,friendshipsReq,updateFriendshipsReq, friends  }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const [showFriendsModal, setShowFriendsModal] = useState(false);
@@ -106,6 +108,8 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpd
             toggleOpen={handleFriendModalToggle}
             friendshipsReq={friendshipsReq}
             currentUser={currentUser}
+            friends={friends}
+            updateFriendshipsReq={updateFriendshipsReq}
           ></FriendsModal>
         </>
     );

@@ -3,7 +3,7 @@ import { User } from '../types/User';
 import { ListItemButton, Box, ListItemAvatar, ListItemText, Typography, List, Button, ListItem, Alert } from '@mui/material';
 import AvatarWrapper from './AvatarWrapper';
 import { FriendshipRequest } from '../types/FriendshipRequest';
-import { cAPIWrapper } from '../services/HttpWrapper';
+import { cAPIWrapper, methodHTTP } from '../services/HttpWrapper';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import CenteredSpinner from './CenteredSpinner';
@@ -11,23 +11,26 @@ import CenteredSpinner from './CenteredSpinner';
 interface FriendPendingRequestProps {
     currentUser: User
     friendshipsReq: FriendshipRequest[];
+    updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
 }
 
-const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUser, friendshipsReq}) => {
+const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUser, friendshipsReq,updateFriendshipsReq}) => {
     const [isLoading, setLoading] = useState(false);
 
     const handleResponse = (reqId: string, accept:boolean) => {
         let url = "/friends/acceptrequest";
+        let method: methodHTTP = 'POST';
         if (!accept) {
             url = "/friends/rejectrequest";
+            method = 'DELETE'
         }
         setLoading(true);
-        cAPIWrapper.post(url, {
+        cAPIWrapper.req(url,method, {
             data: {
                 requestID: reqId
-            }
+            },
         }).then(
-            //()=> setPendingReq(friendshipsRequest.filter(r => r._id.toString() !== reqId.toString() ))
+            (res) => updateFriendshipsReq( friendshipsReq.filter(r => r._id.toString() !== reqId) )
         ).finally(
             ()=>setLoading(false)
         )
@@ -55,7 +58,7 @@ const FriendPendingRequest: React.FC<FriendPendingRequestProps> = ({  currentUse
                                     <Button variant="contained" color="success" endIcon={<ThumbUpAltIcon />} onClick={()=>handleResponse(req._id,true)}>
                                         Accetta
                                     </Button>
-                                        <Button sx={{marginLeft: '10px'}} variant="contained" color="error" endIcon={<ThumbDownAltIcon />} onClick={()=>handleResponse(req._id,true)}>
+                                        <Button sx={{marginLeft: '10px'}} variant="contained" color="error" endIcon={<ThumbDownAltIcon />} onClick={()=>handleResponse(req._id,false)}>
                                         Riufiuta
                                     </Button>
                                 </Box>

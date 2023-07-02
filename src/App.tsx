@@ -34,7 +34,11 @@ function App() {
   const [notification, setNotification] = useState<NotifyMessage>();
   const [showNotication, setShowNotification] = useState(false); 
   const [pendingReq, setPendingReq] = useState<FriendshipRequest[]>([]);
+  const [friends, setFriends] = useState<User[]>([]);
 
+  const updateFriendshipsReq = (newReqs: FriendshipRequest[]) => {
+    setPendingReq(newReqs);
+  }
   const addNotification:notifyCallback = (n: NotifyMessage) => {
     setNotification(n);
     setShowNotification(true);
@@ -127,7 +131,34 @@ function App() {
   }
 
   const onNewFriendshipReq = (data:any) => {
+    const frReq = data as FriendshipRequest;
+    setPendingReq( (prev)=> [...prev, frReq]);
+    NotificationService.push({
+      type: "info",
+      content: <>Hai ricevuto una nuova richiesta di amicizia da {frReq.receiver.username}</>,
+      insertionDate: new Date()
+    })
+  }
 
+  const onRemovedFromFriends = (data: any) => {
+    const user = data as User;
+    if (user._id !== undefined) {
+      setFriends( (oldFriends: User[]) => oldFriends.filter( f => user._id?.toString() !== f._id?.toString()))
+      if (data.type === "removed") {
+        NotificationService.push({
+          type: "error",
+          content: <>L'utente {user.username} ti ha rimosso dai suoi amici</>,
+          insertionDate: new Date()
+        })
+      }
+      else if (data.type === "remover") {
+        NotificationService.push({
+          type: "success",
+          content: <>Hai rimosso con successo dai tuoi amici {user.username}</>,
+          insertionDate: new Date()
+        })
+      }
+    }
   }
 
   const initSocket = () => {
@@ -152,6 +183,7 @@ function App() {
     socket.on('chatroomDeleted', onChatroomDeleted);
     socket.on('chatroomCreated', onChatroomCreated);
     socket.on('newFriendshipRequest', onNewFriendshipReq)
+    socket.on('removedFromFriends', onRemovedFromFriends)
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
@@ -159,6 +191,7 @@ function App() {
       socket.off('chatroomCreated', onChatroomCreated)
       socket.off('chatroomDeleted', onChatroomDeleted);
       socket.off('newFriendshipRequest', onNewFriendshipReq)
+      socket.off('removedFromFriends', onRemovedFromFriends)
     };
   }
 
@@ -185,8 +218,8 @@ function App() {
 
 
   useEffect( () => {
-    setLoading(true);
     if (JWT.length > 0) {
+      setLoading(true);
       cAPIWrapper.get("/chats/latestedited/0").then((res)=> {
         try {
           const chats = res.data.chatrooms as Chatroom[]
@@ -199,6 +232,8 @@ function App() {
         }
       })
       .then( () => retrivePendingFriendshipReq())
+      .then( () => cAPIWrapper.get(`/users/friends/retrive/${currentUser?._id}`) )
+      .then( res => setFriends(res.data))
       .then( () => initSocket() )
     }
   }, [JWT])
@@ -219,6 +254,8 @@ function App() {
             user={currentUser}
             usernamesMap={usernamesMap}
             friendshipsReq={pendingReq}
+            friends={friends}
+            updateFriendshipsReq={updateFriendshipsReq}
           />} />
         <Route path="/login" element={<LoginPage handleUserUpdate={handleUserUpdate}/>} />
         <Route path="/register" element={<RegisterPage />}/>
