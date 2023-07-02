@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Modal, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Modal, SxProps, Theme, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { User } from '../../types/User';
 
@@ -6,10 +6,11 @@ import { User } from '../../types/User';
 export interface ModalWrapperProps {
     open: boolean;
     toggleOpen: () => void;
+    sx?: SxProps<Theme> | undefined;
     children?: React.ReactNode;
 }
 
-const ModalWrapper: React.FC<ModalWrapperProps> = ({ open,toggleOpen , children}) => {
+const ModalWrapper: React.FC<ModalWrapperProps> = ({ open,toggleOpen , children,sx}) => {
     
     const handleClose = () => {
         toggleOpen();
@@ -38,6 +39,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({ open,toggleOpen , children}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                sx={{...sx}}
                 >
                 <Box sx={style}>
                     {children}              

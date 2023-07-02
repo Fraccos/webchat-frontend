@@ -6,21 +6,24 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Menu, MenuItem, Stack } from '@mui/material';
+import { Menu, MenuItem, Stack, Tooltip } from '@mui/material';
 import Searchbar from './Searchbar';
 import { Chatroom } from '../types/Chatroom';
 import AddIcon from '@mui/icons-material/Add';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FriendsModal from './modals/FriendsModal';
 import { User } from '../types/User';
+import AvatarWrapper from './AvatarWrapper';
 
 interface ToolbarProps {
   currentChat? : Chatroom
   currentUser: User;
+  filterChat: string;
+  filterChatUpdate: (v:string)=> void;
 }
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const Toolbar: React.FC<ToolbarProps> = ({currentUser  }) => {
+const Toolbar: React.FC<ToolbarProps> = ({currentUser, filterChat, filterChatUpdate  }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const [showFriendsModal, setShowFriendsModal] = useState(false);
@@ -42,27 +45,30 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser  }) => {
             <AppBar position="static" 
               sx={{justifyContent:"center", flexDirection:"column", display:"flex", height:"80px" }} >
               <MUIToolbar>
-                <IconButton
-                  size="medium"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={handleOpenUserMenu}>
-                  <MoreHorizOutlinedIcon/>
-                </IconButton>
+                <Tooltip title="Informazioni profilo" arrow placement="bottom">
+                  <IconButton
+                      size="medium"
+                      edge="start"
+                      color="inherit"
+                      aria-label="menu"
+                      onClick={handleOpenUserMenu}>
+                    <AvatarWrapper name={currentUser.username}/>
+                  </IconButton>
+                </Tooltip>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
-                  <Searchbar/>
+                  <Searchbar filterChat={filterChat} filterChatUpdate={filterChatUpdate}/>
                 </Typography>
-                <IconButton
-                  size="medium"
-                  edge="end"
-                  sx={{marginLeft: "10px"}}
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={handleFriendModalToggle}>
-                  <PeopleAltIcon/>
-                </IconButton>
-
+                <Tooltip title="Amicizie" arrow placement="bottom">
+                  <IconButton
+                    size="medium"
+                    edge="end"
+                    sx={{marginLeft: "10px"}}
+                    color="inherit"
+                    aria-label="menu"
+                    onClick={handleFriendModalToggle}>
+                    <PeopleAltIcon/>
+                  </IconButton>
+                </Tooltip>
                 <Menu
                   sx={{ mt: '45px' }}
                   id="menu-appbar"
@@ -78,13 +84,9 @@ const Toolbar: React.FC<ToolbarProps> = ({currentUser  }) => {
                   }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}>
-                  <IconButton 
-                    color="inherit"
-                    size="medium"
-                    onClick={handleCloseUserMenu}
-                    sx={{justifyContent: 'center', display: 'flex'}}>
-                    <AccountCircleIcon/>
-                  </IconButton>
+                  <MenuItem sx={{display: "flex", flexDirection:"row", justifyContent:"center", alignContent: "center"}}>
+                      <Typography textAlign="center"><strong style={{textAlign: 'center'}}>{currentUser.username}</strong></Typography>
+                    </MenuItem>
                   {settings.map((setting) => (
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography textAlign="center">{setting}</Typography>

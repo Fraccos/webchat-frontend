@@ -33,12 +33,13 @@ const FriendsModal: React.FC<FriendsModalProps> = ({ open, toggleOpen, currentUs
                 <Box sx={{display:'flex', justifyItems:'center'}}>
                     <ButtonGroup variant="outlined" fullWidth aria-label="outlined primary button group" sx={{width: '100%'}}>
                         {modeList.map(el => 
-                        <Button
-                            variant={mode === el.type ? "contained": "outlined"}
-                            onClick={()=>setMode(el.type)}
-                            >
-                            {el.name}
-                        </Button>
+                            <Button
+                                variant={mode === el.type ? "contained": "outlined"}
+                                onClick={()=>setMode(el.type)}
+                                key={el.type}
+                                >
+                                {el.name}
+                            </Button>
                         )}
                     </ButtonGroup>
                 </Box>

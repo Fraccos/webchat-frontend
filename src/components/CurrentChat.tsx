@@ -10,9 +10,10 @@ import MessageWrapper from './MessageWrapper';
 interface CurrentChatProps {
     currentChat: Chatroom
     user:User
+    usernamesMap: any
 }
 
-const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
+const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesMap }) => {
     const [msgInput, setMsgInput] = useState("");
     const [msgMenuAnchor, setMsgMenuAchor] = useState<HTMLElement>();
     const [isMenuOpen, setMenuOpen] = useState(false)
@@ -63,6 +64,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (msgInput.length > 0) {
+            setMsgInput("");
             cAPIWrapper.post("/chats/message/create", {
                 data: {
                     "chatroomId": currentChat._id,
@@ -75,7 +77,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
                 }
             }).then(
                 (res) => {
-                    setMsgInput("");
+                    
                 }   
             )
         }
@@ -110,6 +112,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user }) => {
                     <MessageWrapper 
                         chatType={currentChat.type ?? "single"}
                         message={msg}
+                        usernamesMap={usernamesMap}
                         handleMsgClick={handleMsgClick}
                         user={user}               />
                 )}

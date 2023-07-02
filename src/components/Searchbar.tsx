@@ -34,6 +34,7 @@ const Search = styled('div')(({ theme }) => ({
       //padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      width: '100%',
       //transition: theme.transitions.create('width'),
       //width: '100%',
     //   [theme.breakpoints.up('sm')]: {
@@ -46,10 +47,11 @@ const Search = styled('div')(({ theme }) => ({
   }));
 
 interface SearchbarProps {
-    
+  filterChat: string;
+  filterChatUpdate: (v:string)=> void;
 }
 
-const Searchbar: React.FC<SearchbarProps> = ({  }) => {
+const Searchbar: React.FC<SearchbarProps> = ({filterChat, filterChatUpdate  }) => {
     return (
         <>
             <Search>
@@ -57,6 +59,9 @@ const Searchbar: React.FC<SearchbarProps> = ({  }) => {
                     <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase
+                    fullWidth
+                    value={filterChat}
+                    onChange={e => filterChatUpdate(e.target.value )}
                     placeholder="Search…"
                     //inputProps={{ 'aria-label': 'search' }}
                 />

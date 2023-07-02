@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import RecentChats from './RecentChats';
 import Searchbar from './Searchbar';
 import { Fab, styled } from '@mui/material';
@@ -22,16 +22,21 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,currentUser}) => {
+    const [filterChat, setFilterChat] = useState("");
     return (
         <>
             <SidebarWrapper>
                 <HeaderSidebar
                     currentUser={currentUser}
                     currentChat={currentChat}
+                    filterChat={filterChat}
+                    filterChatUpdate={(v)=>setFilterChat(v)}
+                    
                 />
                 <RecentChats 
                     toggleNCModel={toggleNCModel}
                     chatrooms={chatrooms}
+                    filterChat={filterChat}
                 />
             </SidebarWrapper>
         </>

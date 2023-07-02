@@ -13,11 +13,12 @@ interface HomeProps {
   chatrooms: Chatroom[]
   user: User | undefined
   requireAuth: () => void;
+  usernamesMap: any
 }
 
 
 
-const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth }) => {
+const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap }) => {
   requireAuth();
   const [isNewChatModalOpen, setNewChatModalOpen] = useState(false);
   const { chatid } = useParams();
@@ -55,6 +56,7 @@ const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth }) => {
             <MainContent
               currentChat={currentChat}
               chatrooms={chatrooms}
+              usernamesMap={usernamesMap}
               user={user}
             />
           </Grid>

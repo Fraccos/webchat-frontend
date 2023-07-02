@@ -4,15 +4,17 @@ import { Box } from '@mui/material';
 import InfoMessage from './InfoMessage';
 import PrivateMessage from './PrivateMessage';
 import { User } from '../types/User';
+import GroupMessage from './GroupMessage';
 
 interface MessageWrapperProps {
     message: Message;
     chatType: string;
     user?: User;
+    usernamesMap:any
     handleMsgClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user, handleMsgClick }) => {
+const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user, handleMsgClick,usernamesMap }) => {
     const isInfoMessage = (msg: Message) => {
         const content = msg.content;
         if (msg.content.length === 1) {
@@ -34,6 +36,13 @@ const MessageWrapper: React.FC<MessageWrapperProps> = ({ message, chatType, user
                             message={message}
                             handleMsgClick={handleMsgClick}
                             user={user}  ></PrivateMessage>
+                    }
+                    {chatType === "group" &&
+                        <GroupMessage 
+                            message={message}
+                            handleMsgClick={handleMsgClick}
+                            usernamesMap={usernamesMap}
+                            user={user}  ></GroupMessage>
                     }
                     </>
                 : null

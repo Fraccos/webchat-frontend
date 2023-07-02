@@ -40,6 +40,7 @@ const NewChatroom: React.FC<NewChatroomProps> = ({ open, currentUser,toggleOpen 
                                 <Button
                                     variant={mode === el.type ? "contained": "outlined"}
                                     onClick={()=>setMode(el.type)}
+                                    key={el.type}
                                     >
                                     {el.name}
                                 </Button>

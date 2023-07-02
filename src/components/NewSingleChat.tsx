@@ -19,7 +19,7 @@ const NewSingleChat: React.FC<NewSingleChatProps> = ({currentUser  }) => {
 
     const createNewSingle = () => {
         if (isValid()) {
-            const members = [...inputSearchUsers, currentUser._id];
+            const members = [...inputSearchUsers.map(u => u._id), currentUser._id];
             const owner = members;
             cAPIWrapper.post("/chats/create", {
                 data: {
@@ -27,7 +27,7 @@ const NewSingleChat: React.FC<NewSingleChatProps> = ({currentUser  }) => {
                     owner: owner,
                     type: "single"
                 }
-            })
+            }).catch(()=>{});
         }
     }
     const disabled = !isValid();
