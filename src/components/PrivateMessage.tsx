@@ -52,9 +52,9 @@ const PrivateMessage: React.FC<PrivateMessageProps> = ({ message,user,handleMsgC
                     <div onClick={(e)=>handleMsgClick(e)}>
                         {message.content.map(chunk => <p style={{margin:"0"}}>{chunk.value}</p>)}
                         <Box sx={{display: "flex", flexDirection: "row", alignContent:"center", alignItems:"center", width: "100%"}}>
-                            <Box sx={{justifySelf: "start"}}>
+                            {isSentByUser &&<Box sx={{justifySelf: "start"}}>
                                 {isMsgReaded(message) ? <DoneAllIcon color='primary'/> :  <CheckIcon/>}
-                            </Box>
+                            </Box>}
                             <Box sx={{justifySelf:"end", flexGrow: 1}}>
                                 <span style={{float: "right" , fontSize:"12px"}}>
                                 {new Date(message.created).toLocaleTimeString("it-it", {

@@ -39,7 +39,7 @@ const AddFriend: React.FC<AddFriendProps> = ({  currentUser  }) => {
                 content: "Richiesta di amicizia inviata con successo",
                 insertionDate: new Date()
             }
-        ))
+        )).catch( (e) => console.error(e));
     }
 
     return (
