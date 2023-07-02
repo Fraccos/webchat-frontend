@@ -72,8 +72,8 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
             alignItems="center"
             justifyContent="center"
             onSubmit={(e) => handleSubmit(e)}
-            sx={{paddingBottom:"20px", paddingTop:"20px", border:1, borderColor:"Blue"}}>
-                <Typography variant="h4" color="blue">Effettua il login</Typography>
+            sx={{paddingBottom:"20px", paddingTop:"20px", border:1, borderColor:"primary.main"}}>
+                <Typography variant="h4" color="primary.main">Effettua il login</Typography>
                 <Box>
                     <TextField 
                     sx={{width:"270px"}} 

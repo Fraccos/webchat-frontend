@@ -68,8 +68,8 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
                 alignItems="center"
                 justifyContent="center"
                 onSubmit={(e) => handleSubmit(e)}
-                sx={{paddingBottom:"20px", paddingTop:"20px", border:1, borderColor:"Blue"}}>
-                <Typography variant="h4" color="blue">Registrati</Typography>
+                sx={{paddingBottom:"20px", paddingTop:"20px", border:1, borderColor:"primary.main"}}>
+                <Typography variant="h4" color="primary.main">Registrati</Typography>
                 <Box>
                     <TextField 
                         sx={{width:"270px"}} label="Username" variant="outlined"

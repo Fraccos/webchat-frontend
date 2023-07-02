@@ -18,12 +18,18 @@ const steps = [
   {
     label: 'Gestione delle amicizie',
     description: `Dal pulsante a destra della barra di ricerca puoi gestire le richieste di amicizia:
-                  puoi vedere la tua lista di amici, accettare o rifiutare le richieste di amicizia e anche cercare nuovi amici`,
+                  puoi vedere la tua lista di amici, accettare o rifiutare le richieste di amicizia e anche cercare nuovi amici.
+                  La gestione delle richieste di amicizia funziona in tempo reale, 
+                  quando ti arriverà una nuova richiesta vedrai un numeretto sull'icona degli amici`,
   },
   {
     label: 'Gestione delle chat',
     description: `Sulla sinistra troverai le chat inziate, premendoci potrai vedere i messaggi.
-                  Una volta aperta la chat premendo sul nome dell'utente o del gruppo potrai vedere le sui informazioni.
+                  Una volta aperta la chat premendo sul nome dell'utente o del gruppo potrai vedere le sue informazioni.
+                  I messaggi sono in tempo reale, mentre stai su leggendo una chat potrebbero arrivarti dei messaggi in un'altra chat,
+                  i messaggi ricevuti (e non visualizzati) verranno segnalati tramite un numeretto affianco al nome della chat.
+                  Le spunte blu affianco ai messaggi ti aiutano a capire se il tuo messaggio è stato visualizzato oppure no.
+                  Puoi anche cercare i messaggi all'interno della chat attraverso la barra di ricerca.
                   Che aspetti? Inizia a chattare.`,
   },
 ];

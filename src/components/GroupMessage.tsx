@@ -70,7 +70,7 @@ const GroupMessage: React.FC<GroupMessageProps> = ({ message,user,handleMsgClick
                         {message.content.map(chunk => <p style={{margin:"0"}}>{chunk.value}</p>)}
                         <Box sx={{display: "flex", flexDirection: "row", alignContent:"center", alignItems:"center", width: "100%"}}>
                             {isSentByUser &&<Box sx={{justifySelf: "start"}}>
-                                {isMsgReaded(message) ? <DoneAllIcon color='primary'/> :  <CheckIcon/>}
+                                {isMsgReaded(message) ? <DoneAllIcon color='info'/> :  <CheckIcon/>}
                             </Box>}
                             <Box sx={{justifySelf:"end", flexGrow: 1}}>
                                 <span style={{float: "right" , fontSize:"12px"}}>
