@@ -1,18 +1,21 @@
 import { Container, Box } from '@mui/material';
 import React from 'react';
+import LoginForm from '../components/LoginForm';
+import { User } from '../types/User';
 
 
 interface LoginProps {
-    
+  handleUserUpdate: (user:User, token: string) => void
 }
 
 const LoginPage: React.FC<LoginProps> = (props) => {
   return (
     <>
-      <Container sx={{border: "black", padding:"50px"}}>
-        <h1>Hello World</h1>
+      <Container sx={{padding:"50px"}}>
+        <LoginForm 
+          handleUserUpdate={props.handleUserUpdate}
+        />
       </Container>
-        
     </>
   )
     
