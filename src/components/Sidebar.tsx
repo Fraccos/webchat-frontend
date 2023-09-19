@@ -23,9 +23,10 @@ interface SidebarProps {
     friendshipsReq: FriendshipRequest[];
     updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
     friends: User[];
+    jwtToken: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,currentUser, friendshipsReq, updateFriendshipsReq, friends}) => {
+const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,currentUser, friendshipsReq, updateFriendshipsReq, friends, jwtToken}) => {
     const [filterChat, setFilterChat] = useState("");
     return (
         <>
@@ -38,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ chatrooms,currentChat,toggleNCModel,c
                     friendshipsReq={friendshipsReq}
                     updateFriendshipsReq={updateFriendshipsReq}
                     friends={friends}
+                    jwtToken={jwtToken}
                 />
                 <RecentChats 
                     toggleNCModel={toggleNCModel}

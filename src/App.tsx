@@ -321,7 +321,7 @@ function App() {
 	};
 
 	const initSocket = () => {
-		const URL = "http://localhost:5000";
+		const URL = "/";
 
 		const socket = io(URL, {
 			auth: {
@@ -447,6 +447,7 @@ function App() {
 										usernamesMap={usernamesMap}
 										friendshipsReq={pendingReq}
 										friends={friends}
+										jwtToken={JWT}
 										updateFriendshipsReq={
 											updateFriendshipsReq
 										}

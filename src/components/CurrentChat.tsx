@@ -140,6 +140,7 @@ const CurrentChat: React.FC<CurrentChatProps> = ({ currentChat, user, usernamesM
         <Box sx={{
             display: "flex",
             flexDirection: "column",
+            overflowY: "scroll",
             height:"90vh"
         }}>
             <Menu

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import NotificationService from "./NotificationService";
 
-export const backendURL = "https://localhost:8080/api";
+export const backendURL = "/api";
 export type methodHTTP = "POST" | "GET" | "PUT" | "DELETE";
 
 const onAxiosError = (error: AxiosError | Error): Promise<AxiosError> => {

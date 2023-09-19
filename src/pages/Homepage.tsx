@@ -18,11 +18,12 @@ interface HomeProps {
   friendshipsReq: FriendshipRequest[];
   friends: User[];
   updateFriendshipsReq: (newReqs: FriendshipRequest[]) => void
+  jwtToken: string;
 }
 
 
 
-const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap,friendshipsReq, updateFriendshipsReq, friends }) => {
+const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap,friendshipsReq, updateFriendshipsReq, friends,jwtToken }) => {
   requireAuth();
   const [isNewChatModalOpen, setNewChatModalOpen] = useState(false);
   const { chatid } = useParams();
@@ -56,6 +57,7 @@ const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap
               toggleNCModel={toggleNCModel}
               friendshipsReq={friendshipsReq}
               friends={friends}
+              jwtToken={jwtToken}
               updateFriendshipsReq={updateFriendshipsReq}
             />  
           </Grid>
