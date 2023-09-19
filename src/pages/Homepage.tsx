@@ -75,6 +75,7 @@ const HomePage: React.FC<HomeProps> = ({chatrooms, user,requireAuth,usernamesMap
           open={isNewChatModalOpen} toggleOpen={toggleNCModel}
           ></NewChatroom>
       </div>
+
     </>
   )
     

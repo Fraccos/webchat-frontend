@@ -6,6 +6,7 @@ import { User } from '../types/User';
 
 interface LoginProps {
   handleUserUpdate: (user:User, token: string) => void
+
 }
 
 const LoginPage: React.FC<LoginProps> = (props) => {
@@ -16,6 +17,7 @@ const LoginPage: React.FC<LoginProps> = (props) => {
           handleUserUpdate={props.handleUserUpdate}
         />
       </Container>
+
     </>
   )
     
