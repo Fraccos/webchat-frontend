@@ -4,6 +4,8 @@ WebChat++ is a message webapp that allows users to send and receive messages fro
 This app was created for a university project for the web foundations course. 
 WebChat++ is a group project and we used cross peer code review while writing it.
 
+This is the Frontend part of the project, here's the link to the [Backend](https://github.com/Fraccos/webchat-backend)
+
 
 
 ## Demo
