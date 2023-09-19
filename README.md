@@ -1,4 +1,3 @@
-
 # WebChat++
 
 WebChat++ is a message webapp that allows users to send and receive messages from each other.
@@ -33,5 +32,3 @@ WebChat++ uses ”web sockets” to enable real-time communication.
 - [@Qwertyadmin](https://github.com/Qwertyadmin)
 - [@verazizzo](https://github.com/verazizzo)
 - [@fedepace4](https://github.com/fedepace4)
-
-
